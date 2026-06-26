@@ -102,6 +102,13 @@
       this.state = null;
     },
 
+    replaceAll(nodes) {
+      if (!this.state) this.state = {};
+      if (!this.state.tree) this.state.tree = { id: "jjconnect", title: "JJ 樹" };
+      this.state.nodes = nodes;
+      this.save();
+    },
+
     // --- supabase adapter (active only when SUPABASE_ANON_KEY is set; see schema.sql) --
     // Each row promotes a few columns for querying and keeps the full node in `data` jsonb,
     // so this maps 1:1 onto the localStorage node shape. Writes sync via _up / _del below.

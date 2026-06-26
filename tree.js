@@ -318,6 +318,15 @@
     $("treeSub").textContent = `${ns.length} nodes · ${ds[0]} → ${ds[ds.length - 1]} · seed: jjconnect.jp`;
   }
   $("btnFit").onclick = fit;
+  $("ioExportMd").onclick = () => JJ_IO.download("jj-tree.md", JJ_IO.toMarkdown(model.state), "text/markdown;charset=utf-8");
+  $("ioExportCsv").onclick = () => JJ_IO.download("jj-tree.csv", JJ_IO.toCSV(model.nodes()), "text/csv;charset=utf-8");
+  $("ioImport").onclick = () => $("fileIn").click();
+  $("fileIn").onchange = async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try { const nodes = JJ_IO.parseCSV(await f.text()); if (nodes.length) { model.replaceAll(nodes); deselect(); layout(); render(); fit(); } }
+    catch (err) { alert("読み込み失敗 / import failed: " + (err.message || err)); }
+    e.target.value = "";
+  };
   $("zin").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 0.8);
   $("zout").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 1.25);
   window.addEventListener("resize", () => fit());

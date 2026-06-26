@@ -101,6 +101,9 @@
     <span class="title">🌳 JJ 樹</span>
     <span class="sub" id="treeSub">growing…</span>
     <span class="spacer"></span>
+    <button class="btn ghost" id="ioExportMd" title="Markdownで書き出す">⬇MD</button>
+    <button class="btn ghost" id="ioExportCsv" title="CSVで書き出す">⬇CSV</button>
+    <button class="btn ghost" id="ioImport" title="CSVから読み込む">⬆</button>
     <button class="btn ghost" id="btnOut" title="ログアウト" style="display:none">⎋</button>
     <button class="btn ghost" id="btnFit" title="全体を見る">⤢ fit</button>
     <button class="btn primary" id="btnAdd">＋ 成長を記録</button>
@@ -170,8 +173,10 @@
   </div>
 </div>
 
+<input type="file" id="fileIn" accept=".csv,text/csv" style="display:none" />
 <script src="config.js"></script>
 <script src="model.js"></script>
+<script src="io.js"></script>
 <script src="tree.js"></script>
 </body>
 </html>
