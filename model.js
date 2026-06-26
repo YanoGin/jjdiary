@@ -50,6 +50,7 @@
     async getSession() { const { data } = await this._sb.auth.getSession(); return data.session; },
     async signIn(email, pw) { const { data, error } = await this._sb.auth.signInWithPassword({ email, password: pw }); if (error) throw error; return data; },
     async signOut() { if (this._sb) await this._sb.auth.signOut(); },
+    async signUp(email, pw) { const { data, error } = await this._sb.auth.signUp({ email, password: pw }); if (error) throw error; return data; },
 
     save() {
       try { localStorage.setItem(KEY, JSON.stringify(this.state)); } catch (e) {}

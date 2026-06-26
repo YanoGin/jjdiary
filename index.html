@@ -93,7 +93,9 @@
   .gatecard input{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;margin-bottom:10px;font-family:inherit;background:#fff;color:var(--ink)}
   .gerr{color:#b5562f;font-size:12px;min-height:15px;text-align:left;margin:-2px 0 6px}
   .gbtn{width:100%;padding:11px;margin-top:2px}
-  .gdemo{margin-top:14px}
+  .gswitch{margin-top:12px}
+  .gswitch a{color:var(--bark-dark);font-size:13px;cursor:pointer;text-decoration:underline}
+  .gdemo{margin-top:10px}
   .gdemo a{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
   @media (max-width:560px){ header .sub{display:none} .legend{display:none} }
 </style>
@@ -176,6 +178,7 @@
     <input id="gPw" type="password" placeholder="password" autocomplete="current-password" />
     <div class="gerr" id="gErr"></div>
     <button class="btn primary gbtn" id="gIn">ログイン / Sign in</button>
+    <div class="gswitch"><a id="gToggle">初めての方 → 登録 / Register</a></div>
     <div class="gdemo"><a id="gDemo">またはデモを見る → demo (this device only)</a></div>
   </div>
 </div>

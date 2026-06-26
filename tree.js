@@ -404,14 +404,28 @@
     $("btnOut").style.display = model.isCloud() ? "" : "none";
   }
   function wireGate() {
-    const inBtn = $("gIn"), err = $("gErr");
+    const inBtn = $("gIn"), err = $("gErr"), tog = $("gToggle");
+    let mode = "in";
+    const setMode = (m) => {
+      mode = m; err.textContent = ""; err.style.color = "";
+      inBtn.textContent = m === "in" ? "ログイン / Sign in" : "登録 / Register";
+      tog.textContent = m === "in" ? "初めての方 → 登録 / Register" : "← ログインに戻る / Sign in";
+    };
+    tog.onclick = () => setMode(mode === "in" ? "up" : "in");
     inBtn.onclick = async () => {
-      err.textContent = "";
+      err.textContent = ""; err.style.color = "";
       const email = $("gEmail").value.trim(), pw = $("gPw").value;
       if (!email || !pw) { err.textContent = "メール／パスワードを入力してください"; return; }
-      inBtn.disabled = true; inBtn.textContent = "…";
-      try { await model.signIn(email, pw); $("gate").classList.remove("open"); await continueBoot(); }
-      catch (e) { err.textContent = (e.message || "ログイン失敗") + ""; inBtn.disabled = false; inBtn.textContent = "ログイン / Sign in"; }
+      const label = inBtn.textContent; inBtn.disabled = true; inBtn.textContent = "…";
+      try {
+        if (mode === "in") {
+          await model.signIn(email, pw); $("gate").classList.remove("open"); await continueBoot();
+        } else {
+          const r = await model.signUp(email, pw);
+          if (r && r.session) { $("gate").classList.remove("open"); await continueBoot(); }
+          else { err.style.color = "#5f9a55"; err.textContent = "確認メールを送信しました。メール内のリンクで登録を完了し、ログインしてください。"; inBtn.disabled = false; inBtn.textContent = label; }
+        }
+      } catch (e) { err.style.color = ""; err.textContent = e.message || (mode === "in" ? "ログイン失敗" : "登録失敗"); inBtn.disabled = false; inBtn.textContent = label; }
     };
     $("gPw").addEventListener("keydown", (e) => { if (e.key === "Enter") inBtn.click(); });
     $("gDemo").onclick = async () => { model.forceLocal = true; $("gate").classList.remove("open"); await continueBoot(); };
