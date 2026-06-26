@@ -5,3 +5,6 @@
 .vercel
 node_modules/
 __pycache__/
+spells.rtf
+.claude/
+.vercel/

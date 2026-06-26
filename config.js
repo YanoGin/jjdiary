@@ -3,6 +3,6 @@
 // To move to the cloud: paste the Supabase ANON / publishable key and set BACKEND:"supabase".
 window.JJ_CONFIG = {
   SUPABASE_URL: "https://sgekfwmaujgghhrzzfhi.supabase.co",
-  SUPABASE_ANON_KEY: "",            // <- owner pastes the anon (publishable) key here
-  BACKEND: "local"                  // "local" | "supabase"
+  SUPABASE_ANON_KEY: "sb_publishable_-dBiNlolcFl5cmNRK8hUWg_04IDXf_y",
+  BACKEND: "supabase"               // "local" | "supabase"
 };

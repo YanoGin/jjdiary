@@ -25,9 +25,9 @@
     TYPES,
 
     async load() {
-      if (cfg.BACKEND === "supabase" && cfg.SUPABASE_ANON_KEY) {
+      if (this._cloud && !this.forceLocal && this._sb) {
         try { return await this._loadSupabase(); }
-        catch (e) { console.warn("supabase load failed, falling back to local:", e); }
+        catch (e) { console.warn("cloud load failed, using local:", e); this._cloudError = e.message || String(e); }
       }
       const raw = localStorage.getItem(KEY);
       if (raw) { this.state = JSON.parse(raw); return this.state; }
@@ -36,6 +36,20 @@
       this.save();
       return this.state;
     },
+
+    // --- auth (Supabase) ------------------------------------------------------------
+    forceLocal: false,
+    isCloud() { return !!this._cloud && !this.forceLocal && !this._cloudError; },
+    async initClient() {
+      if (this._sb) return this._sb;
+      const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+      this._sb = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+      this._cloud = true;
+      return this._sb;
+    },
+    async getSession() { const { data } = await this._sb.auth.getSession(); return data.session; },
+    async signIn(email, pw) { const { data, error } = await this._sb.auth.signInWithPassword({ email, password: pw }); if (error) throw error; return data; },
+    async signOut() { if (this._sb) await this._sb.auth.signOut(); },
 
     save() {
       try { localStorage.setItem(KEY, JSON.stringify(this.state)); } catch (e) {}
@@ -97,9 +111,7 @@
     async _del(id) { if (this._cloud && this._sb) { try { await this._sb.from("nodes").delete().eq("id", id); } catch (e) { console.warn("cloud del:", e); } } },
 
     async _loadSupabase() {
-      const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-      const sb = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
-      this._sb = sb; this._cloud = true;
+      const sb = this._sb;
       const { data, error } = await sb.from("nodes").select("*").order("date", { ascending: true });
       if (error) throw error;
       const toNode = (r) => Object.assign({}, r.data, { id: r.id, type: r.type, date: r.date, parent: r.parent, branch: r.branch });

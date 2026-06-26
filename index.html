@@ -81,6 +81,17 @@
   .typegrid .t.on{border-color:var(--bark);background:#fbf3e4}
   .modal .actions{display:flex;gap:8px;margin-top:18px}
   .hint{color:var(--muted);font-size:12px;margin-top:6px}
+  /* login gate */
+  .gate{position:fixed;inset:0;z-index:50;background:radial-gradient(120% 80% at 50% 100%, #efe7d5 0%, var(--bg) 60%);display:none;align-items:center;justify-content:center}
+  .gate.open{display:flex}
+  .gatecard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 26px;width:340px;max-width:90vw;box-shadow:0 24px 60px rgba(60,40,20,.16);text-align:center}
+  .gtitle{font-size:26px;font-weight:700}
+  .gsub{color:var(--muted);font-size:13px;margin:5px 0 18px}
+  .gatecard input{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;margin-bottom:10px;font-family:inherit;background:#fff;color:var(--ink)}
+  .gerr{color:#b5562f;font-size:12px;min-height:15px;text-align:left;margin:-2px 0 6px}
+  .gbtn{width:100%;padding:11px;margin-top:2px}
+  .gdemo{margin-top:14px}
+  .gdemo a{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
   @media (max-width:560px){ header .sub{display:none} .legend{display:none} }
 </style>
 </head>
@@ -90,6 +101,7 @@
     <span class="title">🌳 JJ 樹</span>
     <span class="sub" id="treeSub">growing…</span>
     <span class="spacer"></span>
+    <button class="btn ghost" id="btnOut" title="ログアウト" style="display:none">⎋</button>
     <button class="btn ghost" id="btnFit" title="全体を見る">⤢ fit</button>
     <button class="btn primary" id="btnAdd">＋ 成長を記録</button>
   </header>
@@ -143,6 +155,18 @@
       <button class="btn" id="mCancel">やめる</button>
       <button class="btn primary" id="mSave" style="margin-left:auto">植える / 保存</button>
     </div>
+  </div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="gatecard">
+    <div class="gtitle">🌳 JJ 樹</div>
+    <div class="gsub">あなたの森に入る · enter your forest</div>
+    <input id="gEmail" type="email" placeholder="email" autocomplete="username" />
+    <input id="gPw" type="password" placeholder="password" autocomplete="current-password" />
+    <div class="gerr" id="gErr"></div>
+    <button class="btn primary gbtn" id="gIn">ログイン / Sign in</button>
+    <div class="gdemo"><a id="gDemo">またはデモを見る → demo (this device only)</a></div>
   </div>
 </div>
 

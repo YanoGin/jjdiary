@@ -322,12 +322,39 @@
   $("zout").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 1.25);
   window.addEventListener("resize", () => fit());
 
-  // --- boot ------------------------------------------------------------------------
-  (async function boot() {
+  // --- boot + auth gate ------------------------------------------------------------
+  async function continueBoot() {
     await model.load();
     buildLegend();
     layout();
     render();
     fit();
+    $("btnOut").style.display = model.isCloud() ? "" : "none";
+  }
+  function wireGate() {
+    const inBtn = $("gIn"), err = $("gErr");
+    inBtn.onclick = async () => {
+      err.textContent = "";
+      const email = $("gEmail").value.trim(), pw = $("gPw").value;
+      if (!email || !pw) { err.textContent = "メール／パスワードを入力してください"; return; }
+      inBtn.disabled = true; inBtn.textContent = "…";
+      try { await model.signIn(email, pw); $("gate").classList.remove("open"); await continueBoot(); }
+      catch (e) { err.textContent = (e.message || "ログイン失敗") + ""; inBtn.disabled = false; inBtn.textContent = "ログイン / Sign in"; }
+    };
+    $("gPw").addEventListener("keydown", (e) => { if (e.key === "Enter") inBtn.click(); });
+    $("gDemo").onclick = async () => { model.forceLocal = true; $("gate").classList.remove("open"); await continueBoot(); };
+  }
+  $("btnOut").onclick = async () => { try { await model.signOut(); } catch (e) {} location.reload(); };
+
+  (async function boot() {
+    const cloud = (window.JJ_CONFIG.BACKEND === "supabase" && window.JJ_CONFIG.SUPABASE_ANON_KEY);
+    if (cloud) {
+      try {
+        await model.initClient();
+        const session = await model.getSession();
+        if (!session) { wireGate(); $("gate").classList.add("open"); return; }
+      } catch (e) { console.warn("auth init failed → local:", e); model.forceLocal = true; }
+    }
+    await continueBoot();
   })();
 })();

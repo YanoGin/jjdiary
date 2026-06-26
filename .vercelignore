@@ -1,0 +1,9 @@
+spells.rtf
+gen_seed.py
+supabase/
+README.md
+.claude/
+.git
+.gitignore
+__pycache__/
+.DS_Store
