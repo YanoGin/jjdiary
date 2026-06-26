@@ -47,8 +47,8 @@
     R = dateRange();
     pos = {}; branchGeo = {};
     const nodes = model.nodes();
+    const childrenOf = (id) => nodes.filter((n) => n.parent === id && n.type !== "root" && n.type !== "branch");
 
-    // seed + roots
     const seed = nodes.find((n) => n.type === "seed" && !n.branch) || nodes.find((n) => n.type === "seed");
     if (seed) pos[seed.id] = { x: CX, y: BOT };
     const roots = nodes.filter((n) => n.type === "root");
@@ -57,37 +57,57 @@
       pos[r.id] = { x: CX + k * 130, y: BOT + 70 + (i % 2) * 34 };
     });
 
-    // branches, ordered up the trunk by their start date
+    // 榕树: place `node`'s children along `limb`. Any child that itself has children
+    // forks into its OWN sub-limb — a leaf you dug into becomes a branch. Recursive.
+    function sprout(node, limb, depth) {
+      const kids = childrenOf(node.id).sort((a, b) => ms(a.date) - ms(b.date));
+      const K = kids.length;
+      kids.forEach((k, i) => {
+        const t = K > 1 ? 0.12 + (i / (K - 1)) * 0.84 : 0.55;
+        const p = quad(limb.P0, limb.P1, limb.P2, t);
+        const nrm = quadNormal(limb.P0, limb.P1, limb.P2, t);
+        const grand = childrenOf(k.id);
+        if (grand.length && depth < 6) {
+          pos[k.id] = { x: p.x, y: p.y, anchor: p, fork: true };
+          // a dug-in node grows its own limb up-and-outward (away from the trunk)
+          const outX = (p.x >= CX ? 1 : -1);
+          let dx = outX * 0.55, dy = -0.85;
+          const nn = Math.hypot(dx, dy); dx /= nn; dy /= nn;
+          const len = (95 + grand.length * 32) * Math.pow(0.86, depth - 1);
+          const tip = { x: p.x + dx * len, y: p.y + dy * len };
+          const mid = { x: (p.x + tip.x) / 2, y: (p.y + tip.y) / 2 };
+          const bow = ((i % 2) ? 1 : -1) * len * 0.10;
+          const ctrl = { x: mid.x - dy * bow, y: mid.y + dx * bow };
+          branchGeo[k.id] = { P0: p, P1: ctrl, P2: tip, n: grand.length, graduated: !!k.graduated, sub: true, depth };
+          pos[k.id].tip = tip;
+          sprout(k, { P0: p, P1: ctrl, P2: tip }, depth + 1);
+        } else {
+          const big = k.type === "flower" || k.type === "fruit";
+          const off = ((i % 2) ? 1 : -1) * (30 + (big ? 10 : 0));
+          pos[k.id] = { x: p.x + nrm.x * off, y: p.y + nrm.y * off, anchor: p };
+        }
+      });
+    }
+
     const branches = nodes.filter((n) => n.type === "branch")
       .sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || ms(a.date) - ms(b.date));
     const N = branches.length;
     branches.forEach((b, bi) => {
-      const kids = nodes.filter((n) => n.parent === b.id && n.type !== "branch")
-        .sort((x, y) => ms(x.date) - ms(y.date));
+      const kidCount = childrenOf(b.id).length;
       const side = b.side || (bi % 2 === 0 ? -1 : 1);
       const tier = Math.floor(bi / 2);
       const spread = 260 + tier * 150;
-      // attach up the trunk by chronological order (keeps the trunk full, not metric time)
       const attachFrac = (bi + 1) / (N + 1);
       const baseY = BOT - attachFrac * (BOT - TOP) * 0.62;
-      const len = 300 + Math.min(kids.length, 12) * 22;
+      const len = 300 + Math.min(kidCount, 12) * 22;
       const tipY = Math.max(TOP, baseY - len);
       const tipX = CX + side * spread;
       const P0 = { x: CX, y: baseY };
       const P1 = { x: CX + side * spread * 0.5, y: (baseY + tipY) / 2 - 50 };
       const P2 = { x: tipX, y: tipY };
-      branchGeo[b.id] = { P0, P1, P2, side, n: kids.length, graduated: !!b.graduated };
+      branchGeo[b.id] = { P0, P1, P2, side, n: kidCount, graduated: !!b.graduated };
       pos[b.id] = { x: tipX, y: tipY };
-
-      const K = kids.length;
-      kids.forEach((nd, j) => {
-        const t = K > 1 ? 0.12 + (j / (K - 1)) * 0.83 : 0.5;   // even, chronological along the branch
-        const p = quad(P0, P1, P2, t);
-        const nrm = quadNormal(P0, P1, P2, t);
-        const big = nd.type === "flower" || nd.type === "fruit";
-        const off = ((j % 2 ? 1 : -1)) * (30 + (big ? 12 : 0));
-        pos[nd.id] = { x: p.x + nrm.x * off, y: p.y + nrm.y * off, anchor: p };
-      });
+      sprout(b, { P0, P1, P2 }, 1);
     });
   }
 
@@ -114,14 +134,14 @@
       }, root);
     }
 
-    // branches (paths first, so nodes sit on top)
-    nodes.filter((n) => n.type === "branch").forEach((b) => {
-      const g = branchGeo[b.id]; if (!g) return;
+    // limbs (paths first, so nodes sit on top): top-level branches + any dug-in sub-limbs
+    Object.keys(branchGeo).forEach((id) => {
+      const g = branchGeo[id]; if (!g) return;
+      const w = g.sub ? Math.max(2, 5 - g.depth) + Math.min(g.n * 0.4, 4)
+                      : 6 + (g.graduated ? 8 : 0) + Math.min(g.n * 0.5, 8);
       el("path", {
         d: `M ${g.P0.x} ${g.P0.y} Q ${g.P1.x} ${g.P1.y} ${g.P2.x} ${g.P2.y}`,
-        class: "branch-path", stroke: cssvar("--bark"),
-        "stroke-width": 6 + (g.graduated ? 8 : 0) + Math.min(g.n * 0.5, 8),
-        opacity: 0.92,
+        class: "branch-path", stroke: cssvar("--bark"), "stroke-width": w, opacity: 0.92,
       }, root);
     });
 
@@ -293,9 +313,14 @@
     } else if (addType === "root") {
       node = model.add({ type: "root", parent: "seed", branch: null, date, title, body });
     } else {
-      let branchId = $("mBranch").value;
-      if (branchId === "__new") { const b = model.addBranch($("mNewBranch").value.trim() || "新しい枝"); branchId = b.id; }
-      node = model.add({ type: addType, parent: branchId, branch: branchId, date, title, body });
+      let parentId = $("mSave").dataset.parent;          // "dig in" → nest under the selected node
+      if (!parentId) {
+        parentId = $("mBranch").value;
+        if (parentId === "__new") { const b = model.addBranch($("mNewBranch").value.trim() || "新しい枝"); parentId = b.id; }
+      }
+      const pn = model.byId(parentId);
+      const branchId = pn ? (pn.branch || pn.id) : parentId;
+      node = model.add({ type: addType, parent: parentId, branch: branchId, date, title, body });
     }
     $("scrim").classList.remove("open");
     layout(); render();
@@ -329,7 +354,13 @@
   };
   $("zin").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 0.8);
   $("zout").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 1.25);
-  window.addEventListener("resize", () => fit());
+  window.addEventListener("resize", () => { if (!window.__lockView) fit(); });
+  window.JJ.dev = {
+    add: (pid, type, title) => { const p = model.byId(pid); const n = model.add({ type, parent: pid, branch: p ? (p.branch || p.id) : pid, date: "2026-06-26", title: title || "node" }); layout(); render(); return n.id; },
+    byTitle: (s) => (model.nodes().find((n) => (n.title || "").includes(s)) || {}).id,
+    zoomTo: (id) => { const p = pos[id]; if (p) { window.__lockView = true; view = { x: p.x - 360, y: p.y - 250, w: 720, h: 520 }; applyView(); } },
+    layout, render, select,
+  };
 
   // --- boot + auth gate ------------------------------------------------------------
   async function continueBoot() {
