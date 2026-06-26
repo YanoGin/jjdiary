@@ -11,6 +11,7 @@
   let pos = {};                      // id -> {x,y}
   let branchGeo = {};                // branchId -> {P0,P1,P2,tipX,tipY,side}
   let selected = null;
+  let linkSource = null;
   let view = { x: 0, y: 0, w: W, h: H };
 
   const ms = (d) => new Date(d + "T00:00:00").getTime();
@@ -157,6 +158,22 @@
       el("path", { d: `M ${seedP.x} ${seedP.y} Q ${(seedP.x + p.x) / 2} ${seedP.y + 40} ${p.x} ${p.y}`, class: "twig", "stroke-width": 1.6, stroke: cssvar("--root") }, root);
     });
 
+    // graduated nodes drop an aerial root to the ground — the banyan bridge → its own tree
+    nodes.filter((n) => n.graduated).forEach((n) => {
+      const tip = pos[n.id]; if (!tip) return;
+      const gy = BOT - 4;
+      el("path", { d: `M ${tip.x} ${tip.y} C ${tip.x + 38} ${(tip.y + gy) / 2}, ${tip.x - 30} ${(tip.y + gy) / 2 + 55}, ${tip.x} ${gy}`,
+        class: "branch-path", stroke: cssvar("--bark"), "stroke-width": 7, opacity: 0.38, fill: "none" }, root);
+      el("text", { x: tip.x, y: gy + 18, "text-anchor": "middle", class: "node-label" }, root).textContent = "🌳 独立した木";
+    });
+
+    // links — the connections you draw (what a mind struggles to hold)
+    model.links().forEach((l) => {
+      const a = pos[l.from], b = pos[l.to]; if (!a || !b) return;
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2 - Math.abs(a.x - b.x) * 0.14 - 30;
+      el("path", { d: `M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`, class: "link" }, root);
+    });
+
     // nodes
     nodes.forEach((n) => {
       const p = pos[n.id]; if (!p) return;
@@ -226,11 +243,12 @@
     drag = { x: e.clientX, y: e.clientY }; applyView();
   });
   stage.addEventListener("pointerup", (e) => { drag = null; stage.classList.remove("grabbing"); });
-  stage.addEventListener("click", () => deselect());
+  stage.addEventListener("click", () => { if (linkSource) { linkSource = null; $("linkHint").classList.remove("on"); } deselect(); });
 
   // --- selection + panel -----------------------------------------------------------
   const $ = (id) => document.getElementById(id);
   function select(id) {
+    if (linkSource && linkSource !== id) { model.addLink(linkSource, id); linkSource = null; $("linkHint").classList.remove("on"); layout(); render(); }
     selected = id; render();
     const n = model.byId(id); if (!n) return;
     const ty = TYPES[n.type] || TYPES.leaf;
@@ -241,11 +259,15 @@
     $("pBody").textContent = n.body || "";
     const refs = $("pRefs"); refs.innerHTML = "";
     (n.refs || []).forEach((r) => { const s = document.createElement("span"); s.className = "ref"; s.textContent = r; refs.appendChild(s); });
-    // related = shares a ref
-    const rel = (n.refs && n.refs.length) ? model.nodes().filter((m) => m.id !== n.id && (m.refs || []).some((r) => n.refs.includes(r))) : [];
+    // connections: explicit links first, then shared-ref relations
+    const linkIds = model.linksOf(n.id);
+    const refRel = (n.refs && n.refs.length) ? model.nodes().filter((m) => m.id !== n.id && (m.refs || []).some((r) => n.refs.includes(r))) : [];
+    const seen = new Set(); const items = [];
+    linkIds.forEach((id2) => { if (!seen.has(id2)) { seen.add(id2); items.push({ id: id2, link: true }); } });
+    refRel.forEach((m) => { if (!seen.has(m.id)) { seen.add(m.id); items.push({ id: m.id, link: false }); } });
     const rl = $("pRelList"); rl.innerHTML = "";
-    $("pRel").style.display = rel.length ? "block" : "none";
-    rel.slice(0, 6).forEach((m) => { const a = document.createElement("a"); a.textContent = (TYPES[m.type]?.glyph || "") + " " + m.title; a.onclick = () => select(m.id); rl.appendChild(a); });
+    $("pRel").style.display = items.length ? "block" : "none";
+    items.slice(0, 12).forEach((it) => { const m = model.byId(it.id); if (!m) return; const a = document.createElement("a"); a.textContent = (it.link ? "🔗 " : "") + (TYPES[m.type]?.glyph || "") + " " + m.title; a.onclick = (e) => { e.stopPropagation(); select(it.id); }; rl.appendChild(a); });
     $("panel").classList.add("open");
   }
   function deselect() { selected = null; $("panel").classList.remove("open"); render(); }
@@ -260,6 +282,16 @@
     if (confirm("このノードを削除しますか？ / Delete this node?")) { model.remove(selected); deselect(); layout(); render(); }
   };
   $("pAddChild").onclick = () => { const n = model.byId(selected); openAdd(n ? (n.type === "branch" ? n.id : n.branch) : null, n ? n.id : null); };
+  $("pGraduate").onclick = () => { if (!selected) return; const n = model.byId(selected); model.update(selected, { graduated: !n.graduated }); layout(); render(); select(selected); };
+  $("pLink").onclick = () => { if (!selected) return; linkSource = selected; $("linkHint").classList.add("on"); $("panel").classList.remove("open"); };
+  $("btnAI").onclick = () => {
+    const ns = model.nodes().filter((n) => n.type !== "root");
+    const lines = ns.map((n) => `- [${n.type}] ${n.title}${n.body ? ": " + n.body.slice(0, 90) : ""}`).join("\n");
+    const prompt = `これは私の樹形日記（tree diary）のノード一覧です。まだ気づいていない「つながり」――因果関係・繰り返すテーマ・未完のタスク（fruitになっていないbranch/seed）――を探し、ノードのタイトルのペアで、理由を添えて提案してください。\n\n${lines}`;
+    const done = () => alert("つながり探索プロンプトをコピーしました。\nお使いのAIに貼り付け、返ってきたペアを 🔗つなぐ で結んでください。");
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(prompt).then(done, () => window.prompt("コピーして使ってください:", prompt));
+    else window.prompt("コピーして使ってください:", prompt);
+  };
 
   // --- add / grow ------------------------------------------------------------------
   let addType = "leaf";

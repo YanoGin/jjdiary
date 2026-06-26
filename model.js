@@ -109,6 +109,14 @@
       this.save();
     },
 
+    update(id, patch) { const n = this.byId(id); if (n) { Object.assign(n, patch); this.save(); this._up(n); } return n; },
+
+    // links — the connections you draw (and later, AI surfaces)
+    links() { if (!this.state.links) this.state.links = []; return this.state.links; },
+    addLink(a, b) { if (a === b) return; const L = this.links(); if (!L.some((l) => (l.from === a && l.to === b) || (l.from === b && l.to === a))) { L.push({ from: a, to: b }); this.save(); } },
+    removeLink(a, b) { this.state.links = this.links().filter((l) => !((l.from === a && l.to === b) || (l.from === b && l.to === a))); this.save(); },
+    linksOf(id) { return this.links().filter((l) => l.from === id || l.to === id).map((l) => (l.from === id ? l.to : l.from)); },
+
     // --- supabase adapter (active only when SUPABASE_ANON_KEY is set; see schema.sql) --
     // Each row promotes a few columns for querying and keeps the full node in `data` jsonb,
     // so this maps 1:1 onto the localStorage node shape. Writes sync via _up / _del below.

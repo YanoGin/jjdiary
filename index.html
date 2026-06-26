@@ -38,6 +38,9 @@
   .node-label{font-size:12px;fill:var(--ink);paint-order:stroke;stroke:#fbf7ee;stroke-width:3px;pointer-events:none}
   .node-label.detail{display:none}
   #stage.zoomed .node-label.detail{display:initial}
+  .link{stroke:#9a86c4;fill:none;stroke-width:1.6;stroke-dasharray:5 5;opacity:.55}
+  .linkhint{position:fixed;top:54px;left:50%;transform:translateX(-50%);background:#5b4b86;color:#fff;padding:6px 15px;border-radius:20px;font-size:13px;z-index:20;display:none;box-shadow:0 6px 20px rgba(60,40,80,.25)}
+  .linkhint.on{display:block}
   .branch-label{font-size:14px;font-weight:700;fill:var(--bark-dark);paint-order:stroke;stroke:var(--bg);stroke-width:4px;pointer-events:none}
   .grad-badge{font-size:11px;fill:#fff}
 
@@ -101,6 +104,7 @@
     <span class="title">🌳 JJ 樹</span>
     <span class="sub" id="treeSub">growing…</span>
     <span class="spacer"></span>
+    <button class="btn ghost" id="btnAI" title="AIでつながりをさがす（プロンプト）">🔮</button>
     <button class="btn ghost" id="ioExportMd" title="Markdownで書き出す">⬇MD</button>
     <button class="btn ghost" id="ioExportCsv" title="CSVで書き出す">⬇CSV</button>
     <button class="btn ghost" id="ioImport" title="CSVから読み込む">⬆</button>
@@ -110,6 +114,7 @@
   </header>
   <main>
     <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="linkhint" id="linkHint">つなぐ相手のノードをクリック（空きをクリックで取消）</div>
     <div class="zoom">
       <button class="btn ghost" id="zin">＋</button>
       <button class="btn ghost" id="zout">－</button>
@@ -129,7 +134,9 @@
         <div class="rel" id="pRel" style="display:none"><div class="rt">つながり · related</div><div id="pRelList"></div></div>
       </div>
       <div class="pf">
-        <button class="btn" id="pAddChild">🌱 掘る · ここから伸ばす</button>
+        <button class="btn" id="pAddChild">🌱 掘る</button>
+        <button class="btn" id="pGraduate">🌳 独立</button>
+        <button class="btn" id="pLink">🔗 つなぐ</button>
         <button class="btn" id="pDel" style="margin-left:auto;color:#b5562f">削除</button>
       </div>
     </aside>
