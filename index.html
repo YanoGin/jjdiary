@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>JJ 樹 · tree diary</title>
+<style>
+  :root{
+    --bg:#FAF7F0; --ink:#3a352f; --muted:#8c8275; --line:#e7e0d3; --panel:#fffdf8;
+    --bark:#8a6a47; --bark-dark:#6f5436;
+    --seed:#c79a3c; --root:#9a8a6b; --leaf:#5f9a55; --knot:#bd5a33;
+    --flower:#d684ab; --fruit:#e0772e; --branch:#7d8a5a; --sky:#f4efe4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","PingFang SC","Segoe UI",sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+  #app{position:fixed;inset:0;display:flex;flex-direction:column}
+
+  header{display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);z-index:5}
+  header .title{font-weight:700;font-size:16px;letter-spacing:.02em}
+  header .sub{color:var(--muted);font-size:12px}
+  header .spacer{flex:1}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:7px 12px;font-size:13px;cursor:pointer;transition:.12s}
+  .btn:hover{border-color:var(--bark);background:#fbf7ee}
+  .btn.primary{background:var(--bark);border-color:var(--bark);color:#fff}
+  .btn.primary:hover{background:var(--bark-dark)}
+  .btn.ghost{padding:7px 9px}
+
+  main{flex:1;position:relative;overflow:hidden}
+  #stage{width:100%;height:100%;display:block;cursor:grab;background:
+     radial-gradient(120% 80% at 50% 100%, #f1ead9 0%, var(--bg) 55%)}
+  #stage.grabbing{cursor:grabbing}
+  .twig{stroke:var(--bark);fill:none;opacity:.55}
+  .branch-path{fill:none;stroke-linecap:round}
+  .node{cursor:pointer}
+  .node .glyph{font-size:22px;dominant-baseline:central;text-anchor:middle;paint-order:stroke;stroke:#fff;stroke-width:3px}
+  .node .ring{fill:#fff;stroke:var(--line)}
+  .node.sel .ring{stroke:var(--bark);stroke-width:2.5}
+  .node-label{font-size:12px;fill:var(--ink);paint-order:stroke;stroke:#fbf7ee;stroke-width:3px;pointer-events:none}
+  .node-label.detail{display:none}
+  #stage.zoomed .node-label.detail{display:initial}
+  .branch-label{font-size:14px;font-weight:700;fill:var(--bark-dark);paint-order:stroke;stroke:var(--bg);stroke-width:4px;pointer-events:none}
+  .grad-badge{font-size:11px;fill:#fff}
+
+  /* controls */
+  .zoom{position:absolute;left:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
+  .legend{position:absolute;right:14px;bottom:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.7;box-shadow:0 6px 22px rgba(80,60,30,.08);max-width:200px}
+  .legend b{display:block;margin-bottom:4px;color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+  .legend .row{display:flex;gap:7px;align-items:baseline}
+  .legend .g{width:18px;text-align:center}
+
+  /* detail panel */
+  #panel{position:absolute;top:0;right:0;height:100%;width:360px;max-width:86vw;background:var(--panel);border-left:1px solid var(--line);box-shadow:-12px 0 36px rgba(80,60,30,.08);transform:translateX(102%);transition:transform .22s ease;z-index:6;display:flex;flex-direction:column}
+  #panel.open{transform:none}
+  #panel .ph{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}
+  #panel .ph .big{font-size:30px}
+  #panel .ph .k{color:var(--muted);font-size:12px}
+  #panel .pb{padding:4px 18px 18px;overflow:auto}
+  #panel h2{font-size:18px;margin:.2em 0 .35em;line-height:1.3}
+  #panel .date{color:var(--muted);font-size:12px;margin-bottom:12px}
+  #panel .body{font-size:14px;line-height:1.65}
+  #panel .refs{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}
+  #panel .ref{font-size:11px;background:#f3eddf;border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:#6a5f4e;font-family:ui-monospace,Menlo,monospace}
+  #panel .rel{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  #panel .rel .rt{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  #panel .rel a{display:block;font-size:13px;color:var(--bark-dark);text-decoration:none;padding:4px 0;cursor:pointer}
+  #panel .rel a:hover{text-decoration:underline}
+  #panel .pf{margin-top:auto;padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px}
+  .x{margin-left:auto;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;border:none;background:none}
+
+  /* modal */
+  .scrim{position:absolute;inset:0;background:rgba(40,32,20,.28);z-index:10;display:none;align-items:center;justify-content:center}
+  .scrim.open{display:flex}
+  .modal{background:var(--panel);border-radius:16px;width:440px;max-width:92vw;max-height:90vh;overflow:auto;padding:20px;box-shadow:0 20px 60px rgba(60,40,20,.25)}
+  .modal h3{margin:0 0 14px;font-size:17px}
+  .modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  .modal input,.modal select,.modal textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+  .modal textarea{min-height:80px;resize:vertical}
+  .typegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .typegrid .t{border:1px solid var(--line);border-radius:9px;padding:8px 4px;text-align:center;cursor:pointer;font-size:12px;background:#fff}
+  .typegrid .t .g{font-size:20px;display:block}
+  .typegrid .t.on{border-color:var(--bark);background:#fbf3e4}
+  .modal .actions{display:flex;gap:8px;margin-top:18px}
+  .hint{color:var(--muted);font-size:12px;margin-top:6px}
+  @media (max-width:560px){ header .sub{display:none} .legend{display:none} }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <span class="title">🌳 JJ 樹</span>
+    <span class="sub" id="treeSub">growing…</span>
+    <span class="spacer"></span>
+    <button class="btn ghost" id="btnFit" title="全体を見る">⤢ fit</button>
+    <button class="btn primary" id="btnAdd">＋ 成長を記録</button>
+  </header>
+  <main>
+    <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="zoom">
+      <button class="btn ghost" id="zin">＋</button>
+      <button class="btn ghost" id="zout">－</button>
+    </div>
+    <div class="legend" id="legend"></div>
+    <aside id="panel">
+      <div class="ph">
+        <span class="big" id="pGlyph">🌱</span>
+        <div><div class="k" id="pKind">seed</div></div>
+        <button class="x" id="pClose">×</button>
+      </div>
+      <div class="pb">
+        <h2 id="pTitle">—</h2>
+        <div class="date" id="pDate"></div>
+        <div class="body" id="pBody"></div>
+        <div class="refs" id="pRefs"></div>
+        <div class="rel" id="pRel" style="display:none"><div class="rt">つながり · related</div><div id="pRelList"></div></div>
+      </div>
+      <div class="pf">
+        <button class="btn" id="pAddChild">＋ ここから伸ばす</button>
+        <button class="btn" id="pDel" style="margin-left:auto;color:#b5562f">削除</button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div class="scrim" id="scrim">
+  <div class="modal">
+    <h3 id="mTitle">🌱 成長を記録 / 添加</h3>
+    <label>種類 · type</label>
+    <div class="typegrid" id="typeGrid"></div>
+    <label>つく枝 · 归属 branch</label>
+    <select id="mBranch"></select>
+    <div id="newBranchWrap" style="display:none">
+      <label>新しい枝の名前 · new branch name</label>
+      <input id="mNewBranch" placeholder="例: 新しい仕事 / a new mission" />
+    </div>
+    <label>日付 · date</label>
+    <input id="mDate" type="date" />
+    <label>タイトル · 标题</label>
+    <input id="mTitleIn" placeholder="ひとことで" />
+    <label>内容 · 内容</label>
+    <textarea id="mBody" placeholder="今日のこと、考え、記録…"></textarea>
+    <div class="hint" id="mHint"></div>
+    <div class="actions">
+      <button class="btn" id="mCancel">やめる</button>
+      <button class="btn primary" id="mSave" style="margin-left:auto">植える / 保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="model.js"></script>
+<script src="tree.js"></script>
+</body>
+</html>

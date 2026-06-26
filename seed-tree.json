@@ -1,0 +1,1629 @@
+{
+  "tree": {
+    "id": "jjconnect",
+    "title": "JJ — the first tree",
+    "seedDate": "2026-02-06",
+    "note": "Grown from the concluded diary. jjconnect.jp is the seed; Rakusat has become its own tree."
+  },
+  "legend": {
+    "seed": "🌱",
+    "root": "🌰",
+    "branch": "🌿",
+    "leaf": "🍃",
+    "knot": "🪢",
+    "flower": "🌸",
+    "fruit": "🍎"
+  },
+  "nodes": [
+    {
+      "id": "seed",
+      "type": "seed",
+      "parent": null,
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "jjconnect.jp",
+      "body": "The company platform, online 2026-02-06. The seed everything else grew from.",
+      "refs": []
+    },
+    {
+      "id": "root-0",
+      "type": "root",
+      "parent": "seed",
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "株式会社ＪＪ ＣＯＮＮＥＣＴ",
+      "body": "法人番号 3011001151860 · 設立 令和5年1月 · 資本金 700万 · 本店 新宿区北新宿. The legal ground it all stands on.",
+      "refs": []
+    },
+    {
+      "id": "root-1",
+      "type": "root",
+      "parent": "seed",
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "朱麗娟 — 代表取締役",
+      "body": "Founder & sole director. The hands that tend the tree.",
+      "refs": []
+    },
+    {
+      "id": "root-2",
+      "type": "root",
+      "parent": "seed",
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "Moat = dataset + judgment",
+      "body": "The engine is swappable compute; what compounds is the data and the judgment on top.",
+      "refs": []
+    },
+    {
+      "id": "root-3",
+      "type": "root",
+      "parent": "seed",
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "Info-only line",
+      "body": "Information & analysis only — no 媒介 / 代行 / 非弁. What lets a 法人 run without a 宅建業免許.",
+      "refs": []
+    },
+    {
+      "id": "root-4",
+      "type": "root",
+      "parent": "seed",
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "Build for exit",
+      "body": "Portability is the real driver — repos, domains, the Supabase cutover all keep it sellable and handover-ready.",
+      "refs": []
+    },
+    {
+      "id": "root-5",
+      "type": "root",
+      "parent": "seed",
+      "branch": null,
+      "date": "2026-02-06",
+      "approx": false,
+      "title": "Ship early, but hot-fix is dangerous",
+      "body": "Cut over as soon as it's safe; a push to main is a prod deploy — diagnose and reproduce first.",
+      "refs": []
+    },
+    {
+      "id": "branch-jjconnect-jp",
+      "type": "branch",
+      "parent": "seed",
+      "branch": "jjconnect-jp",
+      "side": -1,
+      "order": 0,
+      "date": "2026-03-03",
+      "approx": false,
+      "title": "jjconnect.jp · 会社サイト",
+      "body": "6 records · 2026-03-03 → 2026-06-12",
+      "graduated": false,
+      "refs": []
+    },
+    {
+      "id": "jjconnect-jp-0",
+      "type": "leaf",
+      "parent": "branch-jjconnect-jp",
+      "branch": "jjconnect-jp",
+      "date": "2026-03-03",
+      "dateLabel": "2026-03-03 → 03-29",
+      "approx": false,
+      "title": "The build-out",
+      "body": "A heavy month of platform engineering: the role matrix and RLS strategy, the TipTap publish flow, an admin console, a search page with migrations, third-party account integration.",
+      "kind": "ship",
+      "thread": "Build",
+      "refs": [
+        "3257f93",
+        "6655617",
+        "2242543",
+        "IMPLEMENTATION_PLAN.md"
+      ]
+    },
+    {
+      "id": "jjconnect-jp-1",
+      "type": "knot",
+      "parent": "branch-jjconnect-jp",
+      "branch": "jjconnect-jp",
+      "date": "2026-04-06",
+      "dateLabel": "2026-04-06 → 04-13",
+      "approx": false,
+      "title": "The Auth0 login firefight",
+      "body": "An extended battle just to keep login standing: Auth0 OIDC kept throwing 500s and login loops, and the fixes piled up around redirect_uri / www-origin handling, apex→www redirects, sharing the Supabase session with the navbar, even a temporary \"bypass auth for testing\" to break the loop.",
+      "kind": "lesson",
+      "thread": "Auth",
+      "refs": [
+        "df4b4e1",
+        "cc72a9d"
+      ]
+    },
+    {
+      "id": "jjconnect-jp-2",
+      "type": "leaf",
+      "parent": "branch-jjconnect-jp",
+      "branch": "jjconnect-jp",
+      "date": "2026-04-18",
+      "dateLabel": "2026-04-18 → 05-01",
+      "approx": false,
+      "title": "Brand polish, then Auth0 restored",
+      "body": "Front-page identity work: the tagline became つなぐ、その先へ。, the slogan \"GET CONNECTED, GET BEYOND,\" favicon and logo restored, the Services pages translated.",
+      "kind": "decision",
+      "thread": "Brand",
+      "refs": [
+        "ada5577",
+        "4197f1b",
+        "aa12b73"
+      ]
+    },
+    {
+      "id": "jjconnect-jp-3",
+      "type": "seed",
+      "parent": "branch-jjconnect-jp",
+      "branch": "jjconnect-jp",
+      "date": "2026-05-22",
+      "dateLabel": "2026-05-22 → 05-25",
+      "approx": false,
+      "title": "The \".jp major review\" — strip back to Supabase-only",
+      "body": "The cleanup.",
+      "kind": "pivot",
+      "thread": "Auth",
+      "refs": [
+        "de4778c",
+        "fb930e0",
+        "a22582e"
+      ]
+    },
+    {
+      "id": "jjconnect-jp-4",
+      "type": "leaf",
+      "parent": "branch-jjconnect-jp",
+      "branch": "jjconnect-jp",
+      "date": "2026-05-27",
+      "dateLabel": "2026-05-27 → 05-29",
+      "approx": false,
+      "title": "The modern rebuild",
+      "body": "Rebuilt the site on a real design system — shadcn/ui on Tailwind, a React nav and footer with a JA/ZH/EN switcher, a next-intl i18n scaffold — and ported the brochure content to React routes.",
+      "kind": "ship",
+      "thread": "Build",
+      "refs": [
+        "ba5869c",
+        "11027d9",
+        "58a8c6e"
+      ]
+    },
+    {
+      "id": "jjconnect-jp-5",
+      "type": "knot",
+      "parent": "branch-jjconnect-jp",
+      "branch": "jjconnect-jp",
+      "date": "2026-06-12",
+      "dateLabel": "~2026-06-12",
+      "approx": true,
+      "title": "The domains get suspended",
+      "body": "I found it in a junk-mail folder: お名前 / GMO had flagged my account for 本人性確認 — registrant identity verification — and auto-suspended both jjconnect.online and jjconnect.jp when the deadline passed (NXDOMAIN, not a hijack, not billing).",
+      "kind": "lesson",
+      "thread": "Infra",
+      "refs": [
+        "rakusalab.com (new primary)",
+        "reference_vercel_topology.md"
+      ]
+    },
+    {
+      "id": "branch-rakusat",
+      "type": "branch",
+      "parent": "seed",
+      "branch": "rakusat",
+      "side": 1,
+      "order": 1,
+      "date": "2026-04-08",
+      "approx": false,
+      "title": "落札ラボ / Rakusat",
+      "body": "44 records · 2026-04-08 → 2026-06-24",
+      "graduated": true,
+      "refs": []
+    },
+    {
+      "id": "rakusat-0",
+      "type": "seed",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-04-08",
+      "dateLabel": "~2026-04-08",
+      "approx": true,
+      "title": "The flyer gadget that started everything",
+      "body": "It didn't begin as a platform.",
+      "kind": "pivot",
+      "thread": "Origin",
+      "refs": [
+        "\"justsale\" 報 gadget",
+        "v2→v25"
+      ]
+    },
+    {
+      "id": "rakusat-1",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-04-13",
+      "dateLabel": "~2026-04-13",
+      "approx": true,
+      "title": "Auth0, the original sin",
+      "body": "I bolted Auth0 login onto the gadget to gate it, and that one early choice — staff and clients sharing one UI behind one auth layer — became the root of months of pain.",
+      "kind": "decision",
+      "thread": "Auth",
+      "refs": [
+        "v25"
+      ]
+    },
+    {
+      "id": "rakusat-2",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-16",
+      "dateLabel": "2026-05-16",
+      "approx": false,
+      "title": "The three-day contract",
+      "body": "I wrote DECISIONS.md as a binding execution contract and gave it one goal: a clean, reliable mobile field-staff UI — photo upload and on-site records — in three days.",
+      "kind": "decision",
+      "thread": "Launch",
+      "refs": [
+        "DECISIONS.md",
+        "LAUNCH_CHECKLIST.md"
+      ]
+    },
+    {
+      "id": "rakusat-3",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-16",
+      "dateLabel": "2026-05-16",
+      "approx": false,
+      "title": "The rules I set down",
+      "body": "The same day I set the rules I'd hold to.",
+      "kind": "principle",
+      "thread": "Process",
+      "refs": [
+        "feedback memory"
+      ]
+    },
+    {
+      "id": "rakusat-4",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-18",
+      "dateLabel": "~2026-05-18",
+      "approx": true,
+      "title": "The field tool goes live",
+      "body": "The field survey tool went to production at jjconnect.online/rakusat, with the launch checklist as the human gate — a real-phone Safari + Chrome run of the photo-upload → submit → persistence path.",
+      "kind": "ship",
+      "thread": "Launch",
+      "refs": [
+        "LAUNCH_CHECKLIST.md",
+        "API smoke 26/26"
+      ]
+    },
+    {
+      "id": "rakusat-5",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-18",
+      "dateLabel": "2026-05-18",
+      "approx": false,
+      "title": "What to share when clients are competing",
+      "body": "I sat with a genuinely hard product question: my instinct is to share data as widely as possible, but my clients bid against each other on the same 物件.",
+      "kind": "decision",
+      "thread": "Access",
+      "refs": [
+        "facts-vs-judgment taxonomy"
+      ]
+    },
+    {
+      "id": "rakusat-6",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-22",
+      "dateLabel": "2026-05-22",
+      "approx": false,
+      "title": "The migration begins, on a branch",
+      "body": "Kicked off the Supabase Postgres + Auth foundation strictly on a branch — production untouched, main stays TEST_MODE, zero migration code on main — to be flipped only at a controlled cutover.",
+      "kind": "milestone",
+      "thread": "Migration",
+      "refs": [
+        "supabase-migration",
+        "PLATFORM_BLUEPRINT.md §8"
+      ]
+    },
+    {
+      "id": "rakusat-7",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-23",
+      "dateLabel": "2026-05-23",
+      "approx": false,
+      "title": "The mobile \"?\" placeholders",
+      "body": "Property photos showed broken-image placeholders on every non-owner phone — they were hotlinked straight from private Google Drive URLs that only render in a browser already logged into my Google account, so clients got Google's sign-in HTML instead of a picture.",
+      "kind": "lesson",
+      "thread": "Field-survey",
+      "refs": [
+        "PR #12",
+        "PR #13",
+        "api/drive.py"
+      ]
+    },
+    {
+      "id": "rakusat-8",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "The access model: agents as symmetric private tenants",
+      "body": "Locked the model the whole platform rests on: Agent A / B / C are three distinct agent teams — symmetric private tenants on shared facts — each owning its own field / analysis / decisions via per-owner RLS, each publishing to its own clients by tier.",
+      "kind": "decision",
+      "thread": "Access",
+      "refs": [
+        "migration 20260524160001",
+        "reference_user_access_matrix.md"
+      ]
+    },
+    {
+      "id": "rakusat-9",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "Stages 4–6 ready behind flags",
+      "body": "In one intensive push, built and verified the Supabase data paths for the three big surfaces — field, analysis, properties — each behind a backend flag defaulting to sheets, so prod changed by exactly nothing.",
+      "kind": "ship",
+      "thread": "Migration",
+      "refs": [
+        "FIELD_/ANALYSIS_BACKEND flags"
+      ]
+    },
+    {
+      "id": "rakusat-10",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-26",
+      "dateLabel": "2026-05-26",
+      "approx": false,
+      "title": "Soft launch — live, but only auth went soft",
+      "body": "Took the soft launch to prod via blue/green: built the deployment without flipping the domain, verified it on its own URL, then promoted with zero downtime.",
+      "kind": "ship",
+      "thread": "Launch",
+      "refs": [
+        "SOFT_LAUNCH_UNTIL=2026-06-02",
+        "blue/green"
+      ]
+    },
+    {
+      "id": "rakusat-11",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-26",
+      "dateLabel": "2026-05-26",
+      "approx": false,
+      "title": "The report button learns to find its PDF",
+      "body": "The 三点セット button always 404'd because the server looked for a PDF named after 物件命名, but the real court files are named by case number — TYO_R07N00324_1_OCR.pdf — with kana→letter mapping (ヌ→N, ケ→K), zero-padding, and an _OCR tail nothing bridged.",
+      "kind": "ship",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "api/drive.py `_select_report_pdf`",
+        "12 tests"
+      ]
+    },
+    {
+      "id": "rakusat-12",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-27",
+      "dateLabel": "2026-05-27",
+      "approx": false,
+      "title": "Owning the invitation",
+      "body": "Supabase's recovery links expire in about an hour — the wrong primitive for a seven-day window and clients who log in once a fortnight.",
+      "kind": "ship",
+      "thread": "Auth",
+      "refs": [
+        "migration 20260527090001",
+        "invite_redeem"
+      ]
+    },
+    {
+      "id": "rakusat-13",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-27",
+      "dateLabel": "2026-05-27",
+      "approx": false,
+      "title": "The landing flash, fixed right (+ color ships)",
+      "body": "The hero re-derived \"latest batch\" on every page load by downloading and parsing every batch's master sheet — cold-start lag and a permanently-stale 5A flash.",
+      "kind": "ship",
+      "thread": "UI/Color",
+      "refs": [
+        "app_config table",
+        "PR #14 (bc6affb)",
+        "tokens.css"
+      ]
+    },
+    {
+      "id": "rakusat-14",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-05-28",
+      "dateLabel": "2026-05-28",
+      "approx": false,
+      "title": "The soft launch failed — so go the hard way",
+      "body": "The clever fourteen-day soft-kickoff plan failed, and I suspected the soft mechanism itself was the cause.",
+      "kind": "lesson",
+      "thread": "Auth",
+      "refs": [
+        "hard cutover"
+      ]
+    },
+    {
+      "id": "rakusat-15",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-01",
+      "dateLabel": "2026-06-01",
+      "approx": false,
+      "title": "Freeze the analysis sheet",
+      "body": "I recognized that analysis fields churn far faster than facts — \"current analysis report is just a beginning, and we will improve it a lot much [more] frequent than field report\" — and that opinion data has two dimensions a flat sheet can't hold.",
+      "kind": "decision",
+      "thread": "Data",
+      "refs": [
+        "feedback_analysis_sheet_freeze.md"
+      ]
+    },
+    {
+      "id": "rakusat-16",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-08",
+      "dateLabel": "2026-06-08",
+      "approx": false,
+      "title": "Cut over as soon as safe — humans forget",
+      "body": "With field reports working, I pushed to ship the parked profile/watchlist work rather than let it sit on a branch.",
+      "kind": "principle",
+      "thread": "Process",
+      "refs": [
+        "profile + watchlist ship"
+      ]
+    },
+    {
+      "id": "rakusat-17",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-08",
+      "dateLabel": "2026-06-08",
+      "approx": false,
+      "title": "The red flag I didn't want anyone to see",
+      "body": "I owned a data mistake: I'd copied the 5B master sheet without clearing its data, a stale URL rode into the database, and a wrong 警示 (red flag) surfaced on a property.",
+      "kind": "lesson",
+      "thread": "Data",
+      "refs": [
+        "5B master-sheet copy"
+      ]
+    },
+    {
+      "id": "rakusat-18",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-10",
+      "dateLabel": "2026-06-10",
+      "approx": false,
+      "title": "CLAUDE.md is the source of repeated regression",
+      "body": "After the auth cutover went bad, I traced the deeper cause to my own CLAUDE.md: it held the original plan and had never been updated, so agents kept regressing against stale instructions.",
+      "kind": "lesson",
+      "thread": "Process",
+      "refs": [
+        "CLAUDE.md rebuild"
+      ]
+    },
+    {
+      "id": "rakusat-19",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-10",
+      "dateLabel": "2026-06-10",
+      "approx": false,
+      "title": "The cutover incident — a push to main hit prod, and login looped",
+      "body": "The hard cutover hit production instantly, because a push to main is a prod deploy — and it broke login into a repeat-login loop.",
+      "kind": "lesson",
+      "thread": "Auth",
+      "refs": [
+        "1ac4dc7",
+        "tag cutover-parked-2026-06-10"
+      ]
+    },
+    {
+      "id": "rakusat-20",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-10",
+      "dateLabel": "2026-06-10",
+      "approx": false,
+      "title": "A \"private layer\" bypassed all my vetting — set a boundary",
+      "body": "What scared me most in the incident wasn't the bug — it was that a 私密层 redirect had bypassed all the coding and testing skills I rely on, landing unvetted code on prod, and that I'd silently lost track of at least two user seats.",
+      "kind": "lesson",
+      "thread": "Auth",
+      "refs": [
+        "front-door rebuild"
+      ]
+    },
+    {
+      "id": "rakusat-21",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-11",
+      "dateLabel": "2026-06-11",
+      "approx": false,
+      "title": "The auth rescue — front door rebuilt, every flag deleted",
+      "body": "Post-incident, the systematization shipped in four verified passes (suite + browser-E2E green on a preview → promote).",
+      "kind": "milestone",
+      "thread": "Auth",
+      "refs": [
+        "AUTH_SPEC.md",
+        "AUTH_SURFACE_MAP.md",
+        "main==prod"
+      ]
+    },
+    {
+      "id": "rakusat-22",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-14",
+      "dateLabel": "2026-06-14",
+      "approx": false,
+      "title": "Kill anything no longer needed — dead code misleads",
+      "body": "Heading into the read-flip I set a cleanup rule: \"we should kill anything no longer needed.",
+      "kind": "principle",
+      "thread": "Process",
+      "refs": [
+        "test-token removal"
+      ]
+    },
+    {
+      "id": "rakusat-23",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-14",
+      "dateLabel": "2026-06-14",
+      "approx": false,
+      "title": "The auth matrix is mine to define",
+      "body": "I took ownership of authorization policy by putting it in a Google Sheet — the auth matrix — that the system enforces.",
+      "kind": "decision",
+      "thread": "Auth",
+      "refs": [
+        "入例表 Auth col",
+        "Fact/soft-fact/opinion/result"
+      ]
+    },
+    {
+      "id": "rakusat-24",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-15",
+      "dateLabel": "2026-06-15",
+      "approx": false,
+      "title": "The read-flip — the milestone, and \"updates only when I say so\"",
+      "body": "I scheduled the Supabase read-flip for 5am as a deliberate, irreversible-feeling milestone: after it, all data lives in the database and the Sheet is merely a backup.",
+      "kind": "milestone",
+      "thread": "Migration",
+      "refs": [
+        "89cddc1",
+        "public_props",
+        "active_props"
+      ]
+    },
+    {
+      "id": "rakusat-25",
+      "type": "flower",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-15",
+      "dateLabel": "2026-06-15",
+      "approx": false,
+      "title": "The verifier consolidation — the #1 drift liability, resolved",
+      "body": "The auth incident's root class was that every endpoint carried its own copy of the JWT verifier, and the copies drifted.",
+      "kind": "ship",
+      "thread": "Auth",
+      "refs": [
+        "84df609",
+        "prod 599cfa6",
+        "Tripwires #15/#16"
+      ]
+    },
+    {
+      "id": "rakusat-26",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-15",
+      "dateLabel": "2026-06-15",
+      "approx": false,
+      "title": "The 例 wizard, revived clean onto main",
+      "body": "The /rakusat/input/ 404 turned out not to be a read-flip regression — the 例 三点セット wizard had never been on prod, parked on the retired cutover branch, 404 by design.",
+      "kind": "ship",
+      "thread": "Data-input",
+      "refs": [
+        "a68c48a",
+        "STAGE_INPUT_WIZARD_REVIVAL.md"
+      ]
+    },
+    {
+      "id": "rakusat-27",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-16",
+      "dateLabel": "2026-06-16",
+      "approx": false,
+      "title": "ENFORCE_CAPS — the check that was stranded",
+      "body": "I discovered the write-caps gate was stranded: it lived only inside the Supabase backend branch, but prod runs the default sheets backend, so saves fell through ungated — flipping the env var alone would have done nothing.",
+      "kind": "ship",
+      "thread": "Auth",
+      "refs": [
+        "5ef0236",
+        "test_caps_enforcement.py"
+      ]
+    },
+    {
+      "id": "rakusat-28",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-16",
+      "dateLabel": "2026-06-16",
+      "approx": false,
+      "title": "200× — killing the 25-second batches scan",
+      "body": "\"Loading faster\" was the whole brief, so I measured on prod first: every batches view cost 25–53 seconds on a Google Drive scan reused by ~9 callers, and my daily-active users bypassed the CDN cache that only ever helped guests.",
+      "kind": "ship",
+      "thread": "Perf",
+      "refs": [
+        "aadad0d",
+        "migration 20260616090001_batches",
+        "STAGE_PERF_BATCHES.md"
+      ]
+    },
+    {
+      "id": "rakusat-29",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-17",
+      "dateLabel": "2026-06-17",
+      "approx": false,
+      "title": "The auth-matrix sync button (and a dead-invites bug it exposed)",
+      "body": "Made the Sheet's auth matrix tab the single source of truth, applied to Supabase profiles by an owner-clicked 权限同步 button — preview-diff → confirm → apply, never auto-revoking.",
+      "kind": "ship",
+      "thread": "Auth",
+      "refs": [
+        "899ffcc",
+        "Tripwire #17",
+        "STAGE_AUTH_MATRIX_SYNC.md"
+      ]
+    },
+    {
+      "id": "rakusat-30",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-17",
+      "dateLabel": "2026-06-17",
+      "approx": false,
+      "title": "The reading reckoning — and \"the gap was mine, not DocAI's\"",
+      "body": "6B uses full original court reports (which read better than OCR-layered copies), but DocAI's sync endpoint 500'd on most at 30 pages, so I capped it to 10.",
+      "kind": "lesson",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "DOCAI_MAX_PAGES",
+        "REPORT_FIELD_MAP.md"
+      ]
+    },
+    {
+      "id": "rakusat-31",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-17",
+      "dateLabel": "2026-06-17",
+      "approx": false,
+      "title": "The input UI becomes a data-maintenance platform",
+      "body": "Grew the 例 wizard from a one-shot input form into the formal maintenance entrance for any batch, including closed and published ones.",
+      "kind": "ship",
+      "thread": "Data-input",
+      "refs": [
+        "STAGE_INPUT_MAINTENANCE.md",
+        "field-layout.json"
+      ]
+    },
+    {
+      "id": "rakusat-32",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-18",
+      "dateLabel": "2026-06-18",
+      "approx": false,
+      "title": "The first real 6B staff test — and the bug that blocked submit",
+      "body": "The first live 6B staff run (report 687, ブリシア西新井) shipped a batch of fixes each verified against 687 first: katakana-led building names that the Latin-only pattern had left empty, a bare 23-ward 区 now resolving to 东京都, and a 提交概要 that lists all fields with ⚠️ 空缺 flags (\"空缺信息更重要\").",
+      "kind": "lesson",
+      "thread": "Data-input",
+      "refs": [
+        "6201642",
+        "STEPS.length guards"
+      ]
+    },
+    {
+      "id": "rakusat-33",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-18",
+      "dateLabel": "2026-06-18",
+      "approx": false,
+      "title": "The 物件命名 rule I misread, and had to revert",
+      "body": "With submit finally reachable, I briefly misread your restatement of the naming rule as \"drop the 区\" and shipped that — then you corrected me, \"旧规则正确,\" and I reverted.",
+      "kind": "lesson",
+      "thread": "Data-input",
+      "refs": [
+        "5d13723→1ecd74d (revert)"
+      ]
+    },
+    {
+      "id": "rakusat-34",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-18",
+      "dateLabel": "2026-06-18",
+      "approx": false,
+      "title": "delete_property, and the 429 that broke submit",
+      "body": "A property had landed during the wrong-name window and there was no way to remove it — so I built action=delete_property and a 🗑 button to clean it up.",
+      "kind": "ship",
+      "thread": "Data-input",
+      "refs": [
+        "e88e37c",
+        "bdb3192",
+        "regression test"
+      ]
+    },
+    {
+      "id": "rakusat-35",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-18",
+      "dateLabel": "2026-06-18",
+      "approx": false,
+      "title": "Accumulate reading skill — never replace",
+      "body": "Watching the parser meet a structurally different report (令和7年(ヌ)第310号 — 強制競売, 共有持分, 木造戸建 on leased land) I set the rule for all parser work: \"the report is mostly the same format, but different in some detail.",
+      "kind": "principle",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "0b8aefe",
+        "REPORT_READING_TECHNIQUES.md"
+      ]
+    },
+    {
+      "id": "rakusat-36",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-19",
+      "dateLabel": "2026-06-19",
+      "approx": false,
+      "title": "The parsing skill is an asset that grows as we use it",
+      "body": "This is the idea I'd been circling for weeks, finally said plainly: \"the rakusalab parsing skill is an independent asset — it grows as we use it.\" The code is disposable; what compounds is the spec-of-reality underneath it — fixtures, tests, glossary, rules, taxonomy — and that survives any engine swap.",
+      "kind": "principle",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "project_parsing_skill_asset.md"
+      ]
+    },
+    {
+      "id": "rakusat-37",
+      "type": "knot",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "Hot fix is dangerous",
+      "body": "The hardest lesson, from the field-survey incident.",
+      "kind": "lesson",
+      "thread": "Process",
+      "refs": [
+        "POSTMORTEM_field_survey_supabase_2026-06-20.md"
+      ]
+    },
+    {
+      "id": "rakusat-38",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "警示 ⚠ and 关注 / 取下 — the signals on the card",
+      "body": "Built two new public signals across data, AI, and UI in three staged commits, shipped the same day.",
+      "kind": "ship",
+      "thread": "Recommend/Warning",
+      "refs": [
+        "4a1449f",
+        "69a1c54",
+        "69cf62c",
+        "mono-card.js"
+      ]
+    },
+    {
+      "id": "rakusat-39",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "Old batches get their own master sheet, explicitly",
+      "body": "Submit on the 2026-1 batch 400'd because its master sheet names the data tab plainly 入例表 while the code expected 入例表【土地+建物】.",
+      "kind": "ship",
+      "thread": "Data-input",
+      "refs": [
+        "b91de9b",
+        "_resolve_main_tab",
+        "set_batch_master"
+      ]
+    },
+    {
+      "id": "rakusat-40",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-22",
+      "dateLabel": "2026-06-22",
+      "approx": false,
+      "title": "The workflow: Gemini captures, the parser wins, the human finalizes",
+      "body": "I settled the division of labor and asked to build it right away: \"Gemini is a data capturer, parser is skill sets rendering better results, human finalizes every data.\" Shipped the 🧠通读 trial (one Gemini call over the full OCR, filling only empty fields, each marked purple with its exact ¥/$ cost) and the feedback loop behind it: every source's proposal and every human correction land in a read_feedback table — server-scored so a client bug can't corrupt the signal — and a 读取质量 admin tab aggregates per-source accuracy and points at the fields to sharpen.",
+      "kind": "decision",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "9ff7f2d",
+        "read_feedback table",
+        "STAGE_READ_WORKFLOW.md"
+      ]
+    },
+    {
+      "id": "rakusat-41",
+      "type": "leaf",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-22",
+      "dateLabel": "2026-06-22",
+      "approx": false,
+      "title": "One prompt always grows too long — so impose structure",
+      "body": "A too-long extraction prompt caused a regression — a \"fill 无 if unmentioned\" rule bleeding across fields — and I refused the easy patch.",
+      "kind": "decision",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "three-reader team"
+      ]
+    },
+    {
+      "id": "rakusat-42",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-23",
+      "dateLabel": "2026-06-23",
+      "approx": false,
+      "title": "We don't invent technique — we build skills; tools are swappable",
+      "body": "I separated the durable layer from the disposable one for good.",
+      "kind": "principle",
+      "thread": "Parsing/Reading",
+      "refs": [
+        "ARCHITECTURE_READING_PIPELINE.md"
+      ]
+    },
+    {
+      "id": "rakusat-43",
+      "type": "fruit",
+      "parent": "branch-rakusat",
+      "branch": "rakusat",
+      "date": "2026-06-24",
+      "dateLabel": "~2026-06-24",
+      "approx": true,
+      "title": "先进入例 — the secret weapon",
+      "body": "Committed to building 先进入例 — a hidden, owner-only, registry-driven 三点セット wizard to replace the 例 tool entirely, behind a deliberately hard-to-guess path inside the admin page, invisible even to other admins.",
+      "kind": "pivot",
+      "thread": "Data-input",
+      "refs": [
+        "STAGE_XIANJIN.md",
+        "/rakusat/sx-9q3f7k/",
+        "xianjin_reads"
+      ]
+    },
+    {
+      "id": "branch-strategy",
+      "type": "branch",
+      "parent": "seed",
+      "branch": "strategy",
+      "side": -1,
+      "order": 2,
+      "date": "2026-05-16",
+      "approx": false,
+      "title": "Strategy · 経営革新",
+      "body": "17 records · 2026-05-16 → 2026-06-24",
+      "graduated": false,
+      "refs": []
+    },
+    {
+      "id": "strategy-0",
+      "type": "seed",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-05-16",
+      "dateLabel": "2026-05-16",
+      "approx": false,
+      "title": "Rakusat is a platform, not a field tool",
+      "body": "I named the real ambition out loud: this isn't an internal field tool, it's the base of a platform.",
+      "kind": "pivot",
+      "thread": "Platform vision",
+      "refs": [
+        "project_platform_vision.md"
+      ]
+    },
+    {
+      "id": "strategy-1",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-05-18",
+      "dateLabel": "2026-05-18",
+      "approx": false,
+      "title": "Lock the foundation — Supabase, facts shared / judgment private",
+      "body": "Committed the data-and-auth model for the real platform: Supabase (Postgres + Auth + RLS), media on Drive, three roles (client / agent / staff) with agent-teams and client-orgs paired one-to-one, and a \"facts shared, judgment private\" sharing model.",
+      "kind": "decision",
+      "thread": "Platform vision",
+      "refs": [
+        "PLATFORM_BLUEPRINT.md §8"
+      ]
+    },
+    {
+      "id": "strategy-2",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "The why above the platform — be #1 in 競売",
+      "body": "I set the north star above the product: build the most successful court-auction (競売) real-estate business in Japan, with no ceiling.",
+      "kind": "principle",
+      "thread": "Platform vision",
+      "refs": [
+        "project_platform_vision.md"
+      ]
+    },
+    {
+      "id": "strategy-3",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-05-28",
+      "dateLabel": "2026-05-28",
+      "approx": false,
+      "title": "One function budget — give 道 its own project",
+      "body": "Hitting Vercel's 12-function ceiling (I'd already consolidated 12 endpoints down to four), I decided 道 should deploy as its own Vercel project rather than crowd the auction tool's budget.",
+      "kind": "decision",
+      "thread": "Identity/Entity",
+      "refs": [
+        "Vercel Hobby cap"
+      ]
+    },
+    {
+      "id": "strategy-4",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-03",
+      "dateLabel": "2026-06-03",
+      "approx": false,
+      "title": "Topology as a client-profile and optionality play",
+      "body": "I chose the multi-domain shape deliberately, and the reasoning is strategic, not technical: jjconnect.jp is the company / CMS face, jjconnect.online is the production center for the tools, with the Tokyo auction tools as the first branch and a second already scheduled.",
+      "kind": "decision",
+      "thread": "Identity/Entity",
+      "refs": [
+        "reference_vercel_topology.md"
+      ]
+    },
+    {
+      "id": "strategy-5",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-03",
+      "dateLabel": "2026-06-03",
+      "approx": false,
+      "title": "Shared auth follows shared business, not shared owner",
+      "body": "I refined the auth boundary into a principle I want to hold: shared auth follows shared business, not shared owner.",
+      "kind": "principle",
+      "thread": "Identity/Entity",
+      "refs": [
+        "project_platform_vision.md"
+      ]
+    },
+    {
+      "id": "strategy-6",
+      "type": "fruit",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-19",
+      "dateLabel": "2026-06-19",
+      "approx": false,
+      "title": "The parsing skill is an independent compounding asset",
+      "body": "I reframed how I think about parser work: \"the rakusalab parsing skill is an independent asset — it grows as we use it.\" A fix becomes an asset only when it deposits durable knowledge that lowers the cost of the next problem.",
+      "kind": "principle",
+      "thread": "Skill-as-asset",
+      "refs": [
+        "project_parsing_skill_asset.md"
+      ]
+    },
+    {
+      "id": "strategy-7",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "Commercialization — info-only, to dodge the 宅建業 license",
+      "body": "I moved Rakusalab from build to commercialization and locked the legal posture the whole business hangs on: the service is information and analysis only — clients receive curated 競売 data and analysis and bid/buy on their own.",
+      "kind": "decision",
+      "thread": "Commercialization/Legal",
+      "refs": [
+        "COMMERCIALIZATION_PLAN.md"
+      ]
+    },
+    {
+      "id": "strategy-8",
+      "type": "flower",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "The launch gate is Track A; B and C don't block",
+      "body": "Defined \"Ground Zero\" — the public commercial launch — gated only by Track A (commercial readiness): legal docs (rebuild the privacy policy, which currently falsely says \"internal tool\" and becomes a liability on launch, plus 特商法 / 利用規約 / 免責), a security perimeter (captcha, rate-limit, tested restore, breach-notification), and paid infra flipped launch-eve since nothing in the build phase needs it.",
+      "kind": "decision",
+      "thread": "Commercialization/Legal",
+      "refs": [
+        "COMMERCIALIZATION_PLAN.md"
+      ]
+    },
+    {
+      "id": "strategy-9",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "i18n is audience-tiered — public is Japanese-canonical",
+      "body": "On i18n the leverage is scope-tiering, not a rebuild.",
+      "kind": "decision",
+      "thread": "Commercialization/Legal",
+      "refs": [
+        "project_commercialization_plan.md"
+      ]
+    },
+    {
+      "id": "strategy-10",
+      "type": "seed",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-20",
+      "dateLabel": "2026-06-20",
+      "approx": false,
+      "title": "The real migration driver is handover and sale",
+      "body": "When I mused about an \"overall migration,\" the real driver — once I named it honestly — is handover and sale: assigning admin to someone else, or selling the whole repo + business.",
+      "kind": "pivot",
+      "thread": "Handover/Sellability",
+      "refs": [
+        "project_handover_readiness.md (PARKED)"
+      ]
+    },
+    {
+      "id": "strategy-11",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-22",
+      "dateLabel": "2026-06-22",
+      "approx": false,
+      "title": "The moat isn't extraction — it's the dataset + judgment",
+      "body": "Sharpened the asset thesis: extraction (OCR/LLM) is commoditizing — a burst is coming, so ride Google rather than fight it.",
+      "kind": "principle",
+      "thread": "Skill-as-asset",
+      "refs": [
+        "REPORT_READING_SKILL.md"
+      ]
+    },
+    {
+      "id": "strategy-12",
+      "type": "seed",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-22",
+      "dateLabel": "~2026-06-22",
+      "approx": true,
+      "title": "The 経営革新計画 application begins — a B2B pivot",
+      "body": "Started the Tokyo 経営革新計画 承認申請 (Management Innovation Plan; approval unlocks support measures).",
+      "kind": "pivot",
+      "thread": "経営革新計画",
+      "refs": [
+        "project_keieikakushin_application.md"
+      ]
+    },
+    {
+      "id": "strategy-13",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-22",
+      "dateLabel": "2026-06-22",
+      "approx": false,
+      "title": "Entity identity must match the 登記, exactly",
+      "body": "Pulling the 履歴事項全部証明書 forced a precision call: the filing entity is 株式会社ＪＪ ＣＯＮＮＥＣＴ (registered full-width, with a space) — the business plan's \"JJconnect\" is informal, and the application must match the 登記.",
+      "kind": "decision",
+      "thread": "Identity/Entity",
+      "refs": [
+        "履歴事項全部証明書",
+        "法人番号 3011001151860"
+      ]
+    },
+    {
+      "id": "strategy-14",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-23",
+      "dateLabel": "2026-06-23",
+      "approx": false,
+      "title": "Cost is settled — optimize for accuracy, not cheapness",
+      "body": "I checked the reading pipeline's economics against my actual GCP bill and made the call: cost is not a constraint, so optimize for accuracy.",
+      "kind": "decision",
+      "thread": "Skill-as-asset",
+      "refs": [
+        "ARCHITECTURE_READING_PIPELINE.md"
+      ]
+    },
+    {
+      "id": "strategy-15",
+      "type": "flower",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-24",
+      "dateLabel": "~2026-06-24",
+      "approx": true,
+      "title": "v3 of the application — financials are the last gap",
+      "body": "The application reached v3 with all the company and registration data filled (v1/v2 superseded and trashed).",
+      "kind": "milestone",
+      "thread": "経営革新計画",
+      "refs": [
+        "Google Doc v3",
+        "pending real financials"
+      ]
+    },
+    {
+      "id": "strategy-16",
+      "type": "leaf",
+      "parent": "branch-strategy",
+      "branch": "strategy",
+      "date": "2026-06-24",
+      "dateLabel": "2026-06-24",
+      "approx": false,
+      "title": "Segregate the crown jewel — hidden owner-only, decoy in plain sight",
+      "body": "After discovering the reading playbook was publicly served — the \"读取技能资产\" sat in a web-served JSON, the core IP free for the taking — I sealed the leak (moved it to a server-only module, locked by a leak test) and made a strategic call about how the asset is protected.",
+      "kind": "decision",
+      "thread": "Skill-as-asset",
+      "refs": [
+        "reference_xianjin_input",
+        "STAGE_XIANJIN.md"
+      ]
+    },
+    {
+      "id": "branch-do",
+      "type": "branch",
+      "parent": "seed",
+      "branch": "do",
+      "side": 1,
+      "order": 3,
+      "date": "2026-05-24",
+      "approx": false,
+      "title": "道 / Do",
+      "body": "6 records · 2026-05-24 → 2026-05-28",
+      "graduated": false,
+      "refs": []
+    },
+    {
+      "id": "do-0",
+      "type": "leaf",
+      "parent": "branch-do",
+      "branch": "do",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "道 is the destination — but let it emerge",
+      "body": "When Claude proposed the full expected-value / win-probability bidding engine, I said it was right in almost every word — and premature.",
+      "kind": "principle",
+      "thread": "Vision",
+      "refs": [
+        "DO_DESIGN.md",
+        "DO_CONVERSATION_2026-05-24.md"
+      ]
+    },
+    {
+      "id": "do-1",
+      "type": "leaf",
+      "parent": "branch-do",
+      "branch": "do",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "Design locked — three UIs and an AI black box at two touchpoints",
+      "body": "Scoped stage 1 as three plain UIs — a focused-property worklist, a per-property decision canvas (considerations → answers → pinned evidence → recorded opinions → decision), and a people-and-tasks log — over private-by-default do_ tables with RLS, explicitly not Sheets.",
+      "kind": "decision",
+      "thread": "Design",
+      "refs": [
+        "DO_DESIGN.md §5",
+        "shell tile a693c6c"
+      ]
+    },
+    {
+      "id": "do-2",
+      "type": "leaf",
+      "parent": "branch-do",
+      "branch": "do",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "道 is the migration's first customer",
+      "body": "I confirmed the whole 道 build is sequenced after the Supabase DB + auth migration, and the reason is structural: 道 is private judgment — verdicts, bids, opinions — and \"share facts, keep judgment private\" requires the app to enforce who sees what, which is Row-Level Security, which can't exist on Sheets while the app is still TEST_MODE.",
+      "kind": "decision",
+      "thread": "Sequencing",
+      "refs": [
+        "DO_DESIGN.md §2",
+        "PLATFORM_BLUEPRINT.md §8.4"
+      ]
+    },
+    {
+      "id": "do-3",
+      "type": "leaf",
+      "parent": "branch-do",
+      "branch": "do",
+      "date": "2026-05-24",
+      "dateLabel": "2026-05-24",
+      "approx": false,
+      "title": "Record my exact thinking, separately",
+      "body": "I asked for a verbatim record of the whole 道 design conversation — \"every words both of you and me\" — kept apart from the other files, \"I need to remember my thinking in detail.\" This is the same impulse that produced this diary: my reasoning is an asset I don't want to lose to a context window.",
+      "kind": "principle",
+      "thread": "Process",
+      "refs": [
+        "DO_CONVERSATION_2026-05-24.md"
+      ]
+    },
+    {
+      "id": "do-4",
+      "type": "fruit",
+      "parent": "branch-do",
+      "branch": "do",
+      "date": "2026-05-28",
+      "dateLabel": "2026-05-28",
+      "approx": false,
+      "title": "The schema ships — four do_* tables, live",
+      "body": "The first concrete code for 道: the four do_ tables and the do_verdict enum, live on the linked Supabase project, with a 12-assertion pgTAP RLS isolation test mirroring the field test.",
+      "kind": "ship",
+      "thread": "Build",
+      "refs": [
+        "9046d95",
+        "rls_do_isolation_test.sql"
+      ]
+    },
+    {
+      "id": "do-5",
+      "type": "leaf",
+      "parent": "branch-do",
+      "branch": "do",
+      "date": "2026-05-28",
+      "dateLabel": "2026-05-28",
+      "approx": false,
+      "title": "The prototype, then a deliberate pause to read",
+      "body": "Shipped the /rakusat/do/ batch-picker prototype, then re-scoped 道 into three stages (triage → data-driven review → strategy engine) and made canonical a three-tier data model: [F] Facts (a sync mirror, never updated), [O] Opinions (updated, each change auto-writing a diary event), [R] Results (append-only, amend-not-overwrite).",
+      "kind": "decision",
+      "thread": "Build",
+      "refs": [
+        "744d4d3",
+        "SCHEMA_DESIGN.md",
+        "DATA_FLOW_POLICY.md"
+      ]
+    },
+    {
+      "id": "branch-mansion-manager",
+      "type": "branch",
+      "parent": "seed",
+      "branch": "mansion-manager",
+      "side": -1,
+      "order": 4,
+      "date": "2026-05-25",
+      "approx": false,
+      "title": "Mansion Manager",
+      "body": "6 records · 2026-05-25 → 2026-05-25",
+      "graduated": false,
+      "refs": []
+    },
+    {
+      "id": "mansion-manager-0",
+      "type": "seed",
+      "parent": "branch-mansion-manager",
+      "branch": "mansion-manager",
+      "date": "2026-05-25",
+      "dateLabel": "2026-05-25",
+      "approx": false,
+      "title": "Conceived — keep records, proper, minimal energy",
+      "body": "Scoped a second product: a management tool for owners like me — small or mid マンション / commercial buildings, no 管理会社, no resident manager.",
+      "kind": "pivot",
+      "thread": "Vision",
+      "refs": [
+        "project_mansion_manager.md"
+      ]
+    },
+    {
+      "id": "mansion-manager-1",
+      "type": "leaf",
+      "parent": "branch-mansion-manager",
+      "branch": "mansion-manager",
+      "date": "2026-05-25",
+      "dateLabel": "2026-05-25",
+      "approx": false,
+      "title": "Grounded on my real 17-room building",
+      "body": "Anchored v1 in my actual building — 17 rooms, the agent handles rental and I do everything else: clean, check, empty the junk-mail cabin, minor repairs, turnovers, the occasional water-leak incident.",
+      "kind": "decision",
+      "thread": "Scope",
+      "refs": [
+        "incident record",
+        "handover packet"
+      ]
+    },
+    {
+      "id": "mansion-manager-2",
+      "type": "leaf",
+      "parent": "branch-mansion-manager",
+      "branch": "mansion-manager",
+      "date": "2026-05-25",
+      "dateLabel": "2026-05-25",
+      "approx": false,
+      "title": "The lane: internal-first, but multi-tenant from day 0",
+      "body": "Committed the lane honestly: \"I am honest on 'facilitate myself'… even [if] nobody want[s it], I still need something.",
+      "kind": "decision",
+      "thread": "Scope",
+      "refs": [
+        "3-level tenant model"
+      ]
+    },
+    {
+      "id": "mansion-manager-3",
+      "type": "leaf",
+      "parent": "branch-mansion-manager",
+      "branch": "mansion-manager",
+      "date": "2026-05-25",
+      "dateLabel": "2026-05-25",
+      "approx": false,
+      "title": "Reuse the Rakusat diary engine",
+      "body": "Decided to reuse the existing Rakusat diary module as the logbook rather than build fresh — and a recon confirmed it already fits: diary_monos (subject) + diary_events (timestamped: date, cost, notes, todo, media, follow-up) + per-team editable categories, already tenant-scoped with RLS.",
+      "kind": "decision",
+      "thread": "Build",
+      "refs": [
+        "api/diary.py",
+        "20260522120001_diary_tables.sql"
+      ]
+    },
+    {
+      "id": "mansion-manager-4",
+      "type": "leaf",
+      "parent": "branch-mansion-manager",
+      "branch": "mansion-manager",
+      "date": "2026-05-25",
+      "dateLabel": "2026-05-25",
+      "approx": false,
+      "title": "Two pillars, and \"all is about money\"",
+      "body": "Locked the spine around two pillars: (1) records → reports, and (2) a compliance schedule by Japanese law (消防設備点検, 貯水槽清掃, エレベーター検査, 12条点検…), where completing an obligation writes a record + expense + document that feeds the reports — closing the loop.",
+      "kind": "principle",
+      "thread": "Vision",
+      "refs": [
+        "compliance schedule",
+        "MUST-vs-preference"
+      ]
+    },
+    {
+      "id": "mansion-manager-5",
+      "type": "fruit",
+      "parent": "branch-mansion-manager",
+      "branch": "mansion-manager",
+      "date": "2026-05-25",
+      "dateLabel": "2026-05-25",
+      "approx": false,
+      "title": "Market validation — the wedge holds",
+      "body": "Research confirmed the hypothesis: Japan's small-owner segment has cheap rent tools with only a passive 修繕履歴 log, and forward 法定点検 schedulers that target 管理会社 pros at 20–30+ buildings — but nobody combines rent + a forward compliance schedule + a must/preference spend decision for small owners.",
+      "kind": "decision",
+      "thread": "Strategy",
+      "refs": [
+        "pre-build",
+        "oversight-layer positioning"
+      ]
+    },
+    {
+      "id": "branch-jjcashflow",
+      "type": "branch",
+      "parent": "seed",
+      "branch": "jjcashflow",
+      "side": 1,
+      "order": 5,
+      "date": "2026-06-11",
+      "approx": false,
+      "title": "jjcashflow",
+      "body": "7 records · 2026-06-11 → 2026-06-22",
+      "graduated": false,
+      "refs": []
+    },
+    {
+      "id": "jjcashflow-0",
+      "type": "seed",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-11",
+      "dateLabel": "2026-06-11",
+      "approx": false,
+      "title": "Born, and cut loose",
+      "body": "I started the Cashflow Diary as a genuinely separate product, and the same day gave the decisive order: make it standalone, sever every tie to jjconnect.online / rakusalab.",
+      "kind": "pivot",
+      "thread": "Origin",
+      "refs": [
+        "07yang-creator/jjcashflow",
+        "git history reset"
+      ]
+    },
+    {
+      "id": "jjcashflow-1",
+      "type": "leaf",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-11",
+      "dateLabel": "2026-06-11",
+      "approx": false,
+      "title": "A two-sided \"Diary Tree\" — accountant side first",
+      "body": "Pivoted the product to two sides.",
+      "kind": "decision",
+      "thread": "Design",
+      "refs": [
+        "docs/PLAN.md",
+        "会计事务所→客户→定期业务→提醒/沟通→单据"
+      ]
+    },
+    {
+      "id": "jjcashflow-2",
+      "type": "fruit",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-11",
+      "dateLabel": "2026-06-11",
+      "approx": false,
+      "title": "Stage A demo — live on jjconnect.tokyo",
+      "body": "Shipped the accountant demo live: a mobile-first, all-fake-data, no-backend, no-auth walkthrough.",
+      "kind": "ship",
+      "thread": "Build",
+      "refs": [
+        "jjconnect.tokyo",
+        "Vercel jjcashflowdiary"
+      ]
+    },
+    {
+      "id": "jjcashflow-3",
+      "type": "fruit",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-18",
+      "dateLabel": "2026-06-18",
+      "approx": false,
+      "title": "It's a wedge, not an accounting system",
+      "body": "Captured the positioning into the plan: a cheap, mobile-first capture-and-workflow layer that sits in front of the accountant's existing software and feeds it — 不与 SaaS 竞争财税功能.",
+      "kind": "decision",
+      "thread": "Strategy",
+      "refs": [
+        "ecf2ee6",
+        "docs/PLAN.md"
+      ]
+    },
+    {
+      "id": "jjcashflow-4",
+      "type": "leaf",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-19",
+      "dateLabel": "2026-06-19",
+      "approx": false,
+      "title": "Real data — editable, savable, reloadable",
+      "body": "Per my ask — \"real editable, savable, reloadable\" — the accountant workbench now persists to localStorage: in 我的数据 mode every change auto-saves, the landing offers \"继续我的数据 (N 客户 · M 事件),\" and there's full CRUD via a bottom-sheet modal.",
+      "kind": "ship",
+      "thread": "Build",
+      "refs": [
+        "8b9318a",
+        "localStorage jjcf_mine_v1"
+      ]
+    },
+    {
+      "id": "jjcashflow-5",
+      "type": "fruit",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-21",
+      "dateLabel": "2026-06-21",
+      "approx": false,
+      "title": "The client side and real OCR — the 代为入力 wedge made tangible",
+      "body": "Built the 客户记账侧 capture app and the receipt OCR that makes the wedge concrete: 📷 拍照记账 → client-side resize → AI parse → an editable draft with 発行者, 税込金额, per-rate 消費税 (10/8%), インボイス T+13 number, 勘定科目, and a confidence score → ✓ 记账.",
+      "kind": "ship",
+      "thread": "Build",
+      "refs": [
+        "1de5379",
+        "api/parse.py",
+        "claude-haiku-4-5"
+      ]
+    },
+    {
+      "id": "jjcashflow-6",
+      "type": "fruit",
+      "parent": "branch-jjcashflow",
+      "branch": "jjcashflow",
+      "date": "2026-06-22",
+      "dateLabel": "2026-06-22",
+      "approx": false,
+      "title": "OCR made provider-flexible — Gemini preferred",
+      "body": "Made the parser pick its engine by env key: Gemini first (gemini-2.0-flash, cheapest, and I already use Gemini in rakusalab — so a separate key), else Claude, else mock.",
+      "kind": "decision",
+      "thread": "Build",
+      "refs": [
+        "856bef0",
+        "gemini-2.0-flash"
+      ]
+    }
+  ]
+}
