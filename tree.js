@@ -410,6 +410,42 @@
     catch (err) { alert("読み込み失敗 / import failed: " + (err.message || err)); }
     e.target.value = "";
   };
+
+  // feed: merge tagged-markdown tokens into the tree (branches match by name → accumulate)
+  function feedMerge(tokens) {
+    const VALID = new Set(["seed", "root", "branch", "leaf", "knot", "flower", "fruit"]);
+    let added = 0, branchId = null, inbox = null;
+    const stack = [];
+    const ensureInbox = () => {
+      if (!inbox) { const ex = model.branches().find((b) => b.title === "📥 取り込み"); if (ex) inbox = ex.id; else { inbox = model.addBranch("📥 取り込み").id; added++; } }
+      return inbox;
+    };
+    tokens.forEach((t) => {
+      if (t.kind === "branch") {
+        const tl = t.title.trim().toLowerCase();
+        const ex = model.branches().find((b) => { const bl = (b.title || "").trim().toLowerCase(); return bl === tl || bl.includes(tl) || tl.includes(bl); });
+        branchId = ex ? ex.id : model.addBranch(t.title).id;
+        if (!ex) added++;
+        stack.length = 0; return;
+      }
+      const type = VALID.has(t.type) ? t.type : "leaf";
+      while (stack.length && stack[stack.length - 1].indent >= t.indent) stack.pop();
+      const parentId = stack.length ? stack[stack.length - 1].id : (branchId || ensureInbox());
+      const pn = model.byId(parentId);
+      const n = model.add({ type, parent: parentId, branch: pn ? (pn.branch || pn.id) : parentId, date: t.date || undefined, title: t.title, body: t.body });
+      added++; stack.push({ indent: t.indent, id: n.id });
+    });
+    return added;
+  }
+  $("btnFeed").onclick = () => { $("feedText").value = ""; $("feedScrim").classList.add("open"); $("feedText").focus(); };
+  $("feedCancel").onclick = () => $("feedScrim").classList.remove("open");
+  $("feedScrim").addEventListener("click", (e) => { if (e.target === $("feedScrim")) $("feedScrim").classList.remove("open"); });
+  $("feedSave").onclick = () => {
+    const tokens = JJ_IO.parseFeed($("feedText").value);
+    const n = feedMerge(tokens);
+    $("feedScrim").classList.remove("open"); deselect(); layout(); render(); fit();
+    if (n) alert(n + " 件を木に追記しました。 / fed " + n + " nodes");
+  };
   $("zin").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 0.8);
   $("zout").onclick = () => zoomAt(view.x + view.w / 2, view.y + view.h / 2, 1.25);
   window.addEventListener("resize", () => { if (!window.__lockView) fit(); });

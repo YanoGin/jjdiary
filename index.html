@@ -118,6 +118,7 @@
     <span class="title">🌳 JJ 樹</span>
     <span class="sub" id="treeSub">growing…</span>
     <span class="spacer"></span>
+    <button class="btn ghost" id="btnFeed" title="作業の要約を取り込む（Feed）">📥</button>
     <button class="btn ghost" id="btnAI" title="AIでつながりをさがす（プロンプト）">🔮</button>
     <button class="btn ghost" id="ioExportMd" title="Markdownで書き出す">⬇MD</button>
     <button class="btn ghost" id="ioExportCsv" title="CSVで書き出す">⬇CSV</button>
@@ -183,6 +184,19 @@
     <div class="actions">
       <button class="btn" id="mCancel">やめる</button>
       <button class="btn primary" id="mSave" style="margin-left:auto">植える / 保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="feedScrim">
+  <div class="modal">
+    <h3>📥 取り込む / Feed</h3>
+    <div class="hint">作業の要約を <b>タグ付きMarkdown</b> で貼り付け → 木に追記されます（既存の枝には名前で合流）。<br>
+      <code>## 枝名</code> ・ <code>- [fruit] 見出し (2026-06-27)</code> ・ <code>:: 本文</code> ・ インデントで入れ子</div>
+    <textarea id="feedText" style="min-height:200px;font-family:ui-monospace,Menlo,monospace;font-size:13px" placeholder="## Rakusat&#10;- [fruit] 200×: killed the 25s scan&#10;- [knot] hot-fix is dangerous (2026-06-20)&#10;  - [leaf] postmortem written"></textarea>
+    <div class="actions">
+      <button class="btn" id="feedCancel">やめる</button>
+      <button class="btn primary" id="feedSave" style="margin-left:auto">取り込む</button>
     </div>
   </div>
 </div>

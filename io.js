@@ -93,5 +93,35 @@
     setTimeout(() => URL.revokeObjectURL(url), 1500);
   }
 
-  window.JJ_IO = { toCSV, parseCSV, toMarkdown, download };
+  // --- the feed agreement: tagged markdown → tree tokens (work ⇄ diary) ------------
+  //   ## Branch                         a job/mission (matched to an existing branch by name)
+  //   - [fruit] Title (2026-06-27)       a typed node; [type] + optional (date)
+  //   - Title :: body text               no tag = leaf; "::" separates title and body
+  //     - nested item                    indentation = a child (recursion / dig-in)
+  function parseFeed(text) {
+    const out = [];
+    for (const raw of (text || "").split(/\r?\n/)) {
+      const line = raw.replace(/\s+$/, "");
+      if (!line.trim()) continue;
+      const h = /^#{1,2}\s+(.*)$/.exec(line.trim());
+      if (h) { out.push({ kind: "branch", title: h[1].trim() }); continue; }
+      const m = /^(\s*)[-*]\s+(.*)$/.exec(line);
+      if (!m) continue;
+      const indent = m[1].replace(/\t/g, "  ").length;
+      let rest = m[2].trim();
+      let type = "leaf";
+      const tm = /^\[(\w+)\]\s*/.exec(rest);
+      if (tm) { type = tm[1].toLowerCase(); rest = rest.slice(tm[0].length); }
+      let date = "";
+      const dm = /\((\d{4}-\d{2}-\d{2})\)\s*$/.exec(rest);
+      if (dm) { date = dm[1]; rest = rest.slice(0, dm.index).trim(); }
+      let body = "";
+      const bi = rest.indexOf("::");
+      if (bi >= 0) { body = rest.slice(bi + 2).trim(); rest = rest.slice(0, bi).trim(); }
+      out.push({ kind: "node", type, title: rest, body, date, indent });
+    }
+    return out;
+  }
+
+  window.JJ_IO = { toCSV, parseCSV, toMarkdown, parseFeed, download };
 })();
