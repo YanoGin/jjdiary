@@ -90,10 +90,14 @@
       });
     }
 
-    const branches = nodes.filter((n) => n.type === "branch")
+    const weight = (id) => { let w = 1; nodes.filter((n) => n.parent === id).forEach((c) => { w += weight(c.id); }); return w; };
+
+    // main tree: non-graduated branches fan off the central trunk
+    const mainBranches = nodes.filter((n) => n.type === "branch" && !n.graduated)
       .sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || ms(a.date) - ms(b.date));
-    const N = branches.length;
-    branches.forEach((b, bi) => {
+    const N = mainBranches.length;
+    let mainRight = CX + 120;
+    mainBranches.forEach((b, bi) => {
       const kidCount = childrenOf(b.id).length;
       const side = b.side || (bi % 2 === 0 ? -1 : 1);
       const tier = Math.floor(bi / 2);
@@ -103,12 +107,42 @@
       const len = 300 + Math.min(kidCount, 12) * 22;
       const tipY = Math.max(TOP, baseY - len);
       const tipX = CX + side * spread;
+      mainRight = Math.max(mainRight, tipX + 120);
       const P0 = { x: CX, y: baseY };
       const P1 = { x: CX + side * spread * 0.5, y: (baseY + tipY) / 2 - 50 };
       const P2 = { x: tipX, y: tipY };
-      branchGeo[b.id] = { P0, P1, P2, side, n: kidCount, graduated: !!b.graduated };
+      branchGeo[b.id] = { P0, P1, P2, side, n: kidCount, ready: weight(b.id) >= 12 };
       pos[b.id] = { x: tipX, y: tipY };
       sprout(b, { P0, P1, P2 }, 1);
+    });
+
+    // graduated branches become their OWN trees, standing on the ground to the right — the forest
+    const grads = nodes.filter((n) => n.type === "branch" && n.graduated);
+    let gx = mainRight + 320;
+    grads.forEach((g) => {
+      const recs = childrenOf(g.id).sort((a, b) => ms(a.date) - ms(b.date));
+      const M = recs.length;
+      const H = 340 + Math.min(M, 30) * 14;
+      const top = Math.max(TOP, BOT - H);
+      const T0 = { x: gx, y: BOT }, T1 = { x: gx - 22, y: (BOT + top) / 2 }, T2 = { x: gx + 4, y: top };
+      branchGeo["trunk:" + g.id] = { P0: T0, P1: T1, P2: T2, trunk: true, n: weight(g.id) };
+      pos[g.id] = { x: gx, y: BOT };
+      // its records fan off the trunk as branchlets (a real tree, not a column)
+      recs.forEach((r, j) => {
+        const t = M > 1 ? 0.1 + (j / (M - 1)) * 0.84 : 0.5;
+        const base = quad(T0, T1, T2, t);
+        const side = j % 2 === 0 ? -1 : 1;
+        const reach = 95 + (Math.floor(j / 6) % 3) * 36;
+        const tip = { x: base.x + side * reach, y: base.y - 55 - (j % 3) * 16 };
+        const ctrl = { x: base.x + side * reach * 0.5, y: (base.y + tip.y) / 2 - 16 };
+        const grand = childrenOf(r.id);
+        branchGeo["gb:" + r.id] = { P0: base, P1: ctrl, P2: tip, sub: true, depth: grand.length ? 1 : 2, n: grand.length };
+        pos[r.id] = { x: tip.x, y: tip.y, anchor: base };
+        if (grand.length) sprout(r, { P0: base, P1: ctrl, P2: tip }, 2);
+      });
+      const oy = yOf(g.date);
+      branchGeo["bridge:" + g.id] = { P0: { x: CX, y: oy }, P1: { x: (CX + gx) / 2, y: Math.min(oy, BOT - 140) }, P2: { x: gx, y: BOT - 6 }, bridge: true };
+      gx += 360 + Math.min(M, 24) * 10;
     });
   }
 
@@ -138,12 +172,12 @@
     // limbs (paths first, so nodes sit on top): top-level branches + any dug-in sub-limbs
     Object.keys(branchGeo).forEach((id) => {
       const g = branchGeo[id]; if (!g) return;
-      const w = g.sub ? Math.max(2, 5 - g.depth) + Math.min(g.n * 0.4, 4)
-                      : 6 + (g.graduated ? 8 : 0) + Math.min(g.n * 0.5, 8);
-      el("path", {
-        d: `M ${g.P0.x} ${g.P0.y} Q ${g.P1.x} ${g.P1.y} ${g.P2.x} ${g.P2.y}`,
-        class: "branch-path", stroke: cssvar("--bark"), "stroke-width": w, opacity: 0.92,
-      }, root);
+      const d = `M ${g.P0.x} ${g.P0.y} Q ${g.P1.x} ${g.P1.y} ${g.P2.x} ${g.P2.y}`;
+      if (g.bridge) { el("path", { d, class: "branch-path", stroke: cssvar("--bark"), "stroke-width": 3, opacity: 0.3, "stroke-dasharray": "7 7", fill: "none" }, root); return; }
+      const w = g.trunk ? 11 + Math.min(g.n * 0.4, 11)
+              : g.sub ? Math.max(2, 5 - g.depth) + Math.min(g.n * 0.4, 4)
+              : 6 + Math.min(g.n * 0.5, 8);
+      el("path", { d, class: "branch-path", stroke: cssvar("--bark"), "stroke-width": w, opacity: 0.92 }, root);
     });
 
     // twigs from branch path to each hanging node
@@ -158,13 +192,11 @@
       el("path", { d: `M ${seedP.x} ${seedP.y} Q ${(seedP.x + p.x) / 2} ${seedP.y + 40} ${p.x} ${p.y}`, class: "twig", "stroke-width": 1.6, stroke: cssvar("--root") }, root);
     });
 
-    // graduated nodes drop an aerial root to the ground — the banyan bridge → its own tree
-    nodes.filter((n) => n.graduated).forEach((n) => {
-      const tip = pos[n.id]; if (!tip) return;
-      const gy = BOT - 4;
-      el("path", { d: `M ${tip.x} ${tip.y} C ${tip.x + 38} ${(tip.y + gy) / 2}, ${tip.x - 30} ${(tip.y + gy) / 2 + 55}, ${tip.x} ${gy}`,
-        class: "branch-path", stroke: cssvar("--bark"), "stroke-width": 7, opacity: 0.38, fill: "none" }, root);
-      el("text", { x: tip.x, y: gy + 18, "text-anchor": "middle", class: "node-label" }, root).textContent = "🌳 独立した木";
+    // a branch heavy enough to stand alone gets a gentle suggestion (you confirm via 🌳独立)
+    Object.keys(branchGeo).forEach((id) => {
+      const g = branchGeo[id]; if (!g || !g.ready) return;
+      const p = pos[id]; if (!p) return;
+      el("text", { x: p.x, y: p.y - 24, "text-anchor": "middle", class: "node-label", "font-size": 12, fill: cssvar("--muted") }, root).textContent = "🌳? 独立できます";
     });
 
     // links — the connections you draw (what a mind struggles to hold)
