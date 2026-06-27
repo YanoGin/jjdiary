@@ -206,6 +206,31 @@
 
   function truncate(s, n) { return (s || "").length > n ? s.slice(0, n - 1) + "…" : (s || ""); }
 
+  // minimal markdown → html for the reader pane (no deps)
+  function mdToHtml(src) {
+    if (!src) return "";
+    const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const inline = (t) => esc(t)
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    let html = "", inList = false, inCode = false, para = [];
+    const flushP = () => { if (para.length) { html += "<p>" + inline(para.join(" ")) + "</p>"; para = []; } };
+    for (const raw of src.split(/\r?\n/)) {
+      if (/^```/.test(raw)) { if (inCode) { html += "</pre>"; inCode = false; } else { flushP(); if (inList) { html += "</ul>"; inList = false; } html += "<pre>"; inCode = true; } continue; }
+      if (inCode) { html += esc(raw) + "\n"; continue; }
+      const h = /^(#{1,4})\s+(.*)$/.exec(raw);
+      if (h) { flushP(); if (inList) { html += "</ul>"; inList = false; } const lv = h[1].length; html += `<h${lv}>` + inline(h[2]) + `</h${lv}>`; continue; }
+      const li = /^\s*[-*]\s+(.*)$/.exec(raw);
+      if (li) { flushP(); if (!inList) { html += "<ul>"; inList = true; } html += "<li>" + inline(li[1]) + "</li>"; continue; }
+      if (/^\s*$/.test(raw)) { flushP(); if (inList) { html += "</ul>"; inList = false; } continue; }
+      para.push(raw.trim());
+    }
+    flushP(); if (inList) html += "</ul>"; if (inCode) html += "</pre>";
+    return html;
+  }
+
   // --- view / pan / zoom -----------------------------------------------------------
   function fit() {
     const ps = Object.values(pos);
@@ -256,7 +281,7 @@
     $("pKind").textContent = `${ty.cn} · ${ty.en}`;
     $("pTitle").textContent = n.title || "—";
     $("pDate").textContent = (n.dateLabel || n.date) + (n.approx ? "  (approx)" : "") + (n.thread ? "  ·  " + n.thread : "");
-    $("pBody").textContent = n.body || "";
+    $("pBody").innerHTML = mdToHtml(n.body || "");
     const refs = $("pRefs"); refs.innerHTML = "";
     (n.refs || []).forEach((r) => { const s = document.createElement("span"); s.className = "ref"; s.textContent = r; refs.appendChild(s); });
     // connections: explicit links first, then shared-ref relations
@@ -268,9 +293,10 @@
     const rl = $("pRelList"); rl.innerHTML = "";
     $("pRel").style.display = items.length ? "block" : "none";
     items.slice(0, 12).forEach((it) => { const m = model.byId(it.id); if (!m) return; const a = document.createElement("a"); a.textContent = (it.link ? "🔗 " : "") + (TYPES[m.type]?.glyph || "") + " " + m.title; a.onclick = (e) => { e.stopPropagation(); select(it.id); }; rl.appendChild(a); });
+    $("pEmpty").style.display = "none"; $("pContent").style.display = "flex";
     $("panel").classList.add("open");
   }
-  function deselect() { selected = null; $("panel").classList.remove("open"); render(); }
+  function deselect() { selected = null; $("panel").classList.remove("open"); $("pContent").style.display = "none"; $("pEmpty").style.display = ""; render(); }
   $("pClose").onclick = deselect;
   $("pDel").onclick = () => {
     if (!selected) return;

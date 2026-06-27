@@ -25,7 +25,8 @@
   .btn.primary:hover{background:var(--bark-dark)}
   .btn.ghost{padding:7px 9px}
 
-  main{flex:1;position:relative;overflow:hidden}
+  main{flex:1;display:flex;min-height:0}
+  #treepane{flex:1;position:relative;overflow:hidden;min-width:0}
   #stage{width:100%;height:100%;display:block;cursor:grab;background:
      radial-gradient(120% 80% at 50% 100%, #f1ead9 0%, var(--bg) 55%)}
   #stage.grabbing{cursor:grabbing}
@@ -52,8 +53,19 @@
   .legend .g{width:18px;text-align:center}
 
   /* detail panel */
-  #panel{position:absolute;top:0;right:0;height:100%;width:360px;max-width:86vw;background:var(--panel);border-left:1px solid var(--line);box-shadow:-12px 0 36px rgba(80,60,30,.08);transform:translateX(102%);transition:transform .22s ease;z-index:6;display:flex;flex-direction:column}
-  #panel.open{transform:none}
+  #panel{position:relative;flex:0 0 400px;width:400px;background:var(--panel);border-left:1px solid var(--line);z-index:6;display:flex;flex-direction:column;overflow:hidden}
+  .pempty{margin:auto;padding:40px 22px;color:var(--muted);text-align:center;font-size:14px;line-height:2}
+  #panel .body.md h2,#panel .body.md h3,#panel .body.md h4{font-size:15px;margin:.9em 0 .3em;line-height:1.35}
+  #panel .body.md p{margin:.5em 0}
+  #panel .body.md ul{margin:.4em 0;padding-left:1.2em}
+  #panel .body.md li{margin:.2em 0}
+  #panel .body.md code{background:#f3eddf;padding:1px 5px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace}
+  #panel .body.md pre{background:#f3eddf;padding:10px;border-radius:8px;overflow:auto;font-size:12px}
+  #panel .body.md a{color:var(--bark-dark)}
+  @media (max-width:760px){
+    #panel{position:absolute;top:0;right:0;height:100%;max-width:88vw;box-shadow:-12px 0 36px rgba(80,60,30,.10);transform:translateX(102%);transition:transform .22s ease}
+    #panel.open{transform:none}
+  }
   #panel .ph{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}
   #panel .ph .big{font-size:30px}
   #panel .ph .k{color:var(--muted);font-size:12px}
@@ -115,31 +127,36 @@
     <button class="btn primary" id="btnAdd">＋ 成長を記録</button>
   </header>
   <main>
-    <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="linkhint" id="linkHint">つなぐ相手のノードをクリック（空きをクリックで取消）</div>
-    <div class="zoom">
-      <button class="btn ghost" id="zin">＋</button>
-      <button class="btn ghost" id="zout">－</button>
+    <div id="treepane">
+      <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="linkhint" id="linkHint">つなぐ相手のノードをクリック（空きをクリックで取消）</div>
+      <div class="zoom">
+        <button class="btn ghost" id="zin">＋</button>
+        <button class="btn ghost" id="zout">－</button>
+      </div>
+      <div class="legend" id="legend"></div>
     </div>
-    <div class="legend" id="legend"></div>
     <aside id="panel">
-      <div class="ph">
-        <span class="big" id="pGlyph">🌱</span>
-        <div><div class="k" id="pKind">seed</div></div>
-        <button class="x" id="pClose">×</button>
-      </div>
-      <div class="pb">
-        <h2 id="pTitle">—</h2>
-        <div class="date" id="pDate"></div>
-        <div class="body" id="pBody"></div>
-        <div class="refs" id="pRefs"></div>
-        <div class="rel" id="pRel" style="display:none"><div class="rt">つながり · related</div><div id="pRelList"></div></div>
-      </div>
-      <div class="pf">
-        <button class="btn" id="pAddChild">🌱 掘る</button>
-        <button class="btn" id="pGraduate">🌳 独立</button>
-        <button class="btn" id="pLink">🔗 つなぐ</button>
-        <button class="btn" id="pDel" style="margin-left:auto;color:#b5562f">削除</button>
+      <div class="pempty" id="pEmpty">🍃<br>木のノードをクリックすると<br>ここに詳細が開きます</div>
+      <div id="pContent" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+        <div class="ph">
+          <span class="big" id="pGlyph">🌱</span>
+          <div><div class="k" id="pKind">seed</div></div>
+          <button class="x" id="pClose">×</button>
+        </div>
+        <div class="pb">
+          <h2 id="pTitle">—</h2>
+          <div class="date" id="pDate"></div>
+          <div class="body md" id="pBody"></div>
+          <div class="refs" id="pRefs"></div>
+          <div class="rel" id="pRel" style="display:none"><div class="rt">つながり · connections</div><div id="pRelList"></div></div>
+        </div>
+        <div class="pf">
+          <button class="btn" id="pAddChild">🌱 掘る</button>
+          <button class="btn" id="pGraduate">🌳 独立</button>
+          <button class="btn" id="pLink">🔗 つなぐ</button>
+          <button class="btn" id="pDel" style="margin-left:auto;color:#b5562f">削除</button>
+        </div>
       </div>
     </aside>
   </main>
