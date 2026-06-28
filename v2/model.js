@@ -9,7 +9,7 @@
     async load() {
       const raw = localStorage.getItem(KEY);
       if (raw) { this.state = JSON.parse(raw); return this.state; }
-      this.state = await fetch("seed.json").then((r) => r.json());
+      this.state = await fetch("/v2/seed.json").then((r) => r.json());
       this.save();
       return this.state;
     },
