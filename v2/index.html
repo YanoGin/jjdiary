@@ -47,6 +47,14 @@
   .row{display:flex;gap:8px;align-items:center;margin-top:8px}
   .actions{display:flex;gap:8px;margin-top:16px}
   pre{background:#f3eddf;border-radius:8px;padding:12px;font-size:12px;overflow:auto;max-height:46vh;white-space:pre-wrap;word-break:break-word}
+  .gate{position:fixed;inset:0;z-index:50;background:radial-gradient(120% 80% at 50% 100%, #efe7d5, var(--bg) 60%);display:none;align-items:center;justify-content:center}
+  .gate.open{display:flex}
+  .gatecard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px 26px;width:340px;max-width:90vw;box-shadow:0 24px 60px rgba(60,40,20,.16);text-align:center}
+  .gt{font-size:24px;font-weight:700}.gs{color:var(--muted);font-size:13px;margin:5px 0 18px}
+  .gatecard input{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;margin-bottom:10px;background:#fff;color:var(--ink)}
+  .gerr{color:#b5562f;font-size:12px;min-height:15px;text-align:left;margin:-2px 0 6px}
+  .gbtn{width:100%;padding:11px;margin-top:2px}
+  .gsw{margin-top:12px}.gsw a{color:var(--bark-dark);font-size:13px;cursor:pointer;text-decoration:underline}
   @media(max-width:760px){ aside{position:absolute;right:0;top:0;height:100%;max-width:88vw;transform:translateX(102%);transition:.2s;box-shadow:-12px 0 36px rgba(80,60,30,.1)} aside.open{transform:none} .legend{display:none} }
 </style>
 </head>
@@ -56,6 +64,7 @@
     <span class="t">🌳 JJ Mind-Forest</span>
     <span class="sub">v2 · data-first · your data, your AI</span>
     <span class="spacer"></span>
+    <button class="btn" id="btnOut" title="ログアウト" style="display:none">⎋</button>
     <button class="btn" id="btnReset" title="種データに戻す">↺</button>
     <button class="btn ghost" id="btnFit">⤢ fit</button>
     <button class="btn primary" id="btnFeed">📨 push</button>
@@ -106,6 +115,20 @@
   </div>
 </div>
 
+<div class="gate" id="gate">
+  <div class="gatecard">
+    <div class="gt">🌳 JJ Mind-Forest</div>
+    <div class="gs">あなたの森に入る · enter your forest</div>
+    <input id="gEmail" type="email" placeholder="email" autocomplete="username" />
+    <input id="gPw" type="password" placeholder="password" autocomplete="current-password" />
+    <div class="gerr" id="gErr"></div>
+    <button class="btn primary gbtn" id="gIn">ログイン / Sign in</button>
+    <div class="gsw"><a id="gTog">初めての方 → 登録 / Register</a></div>
+  </div>
+</div>
+
+<script src="/v2/config.js"></script>
+<script src="/v2/auth.js"></script>
 <script src="/v2/model.js"></script>
 <script src="/v2/forest.js"></script>
 <script>
@@ -113,7 +136,9 @@ const { model } = JJ2;
 const $ = (id) => document.getElementById(id);
 const KIND_JA = { project:"プロジェクト · tree", idea:"芽 · idea", milestone:"花 · milestone", decision:"葉 · decision", headache:"節 · headache", value:"果 · value", open:"未完 · open", note:"記録 · note" };
 
-(async function () {
+let booted = false;
+async function continueBoot() {
+  if (booted) return; booted = true;
   await model.load();
   JJ2Forest.init($("stage"), model, onSelect);
   buildLegend();
@@ -123,7 +148,34 @@ const KIND_JA = { project:"プロジェクト · tree", idea:"芽 · idea", mile
   $("zin").onclick = () => { $("stage").dispatchEvent(new WheelEvent("wheel", { deltaY: -200, clientX: innerWidth/3, clientY: innerHeight/2 })); };
   $("zout").onclick = () => { $("stage").dispatchEvent(new WheelEvent("wheel", { deltaY: 200, clientX: innerWidth/3, clientY: innerHeight/2 })); };
   $("btnReset").onclick = () => { if (confirm("種データに戻しますか？ / reset to seed?")) { model.reset(); location.reload(); } };
+  $("btnOut").style.display = "";
+  $("btnOut").onclick = async () => { try { await JJ2Auth.signOut(); } catch (e) {} location.reload(); };
   wireFeed(); wirePack();
+}
+
+function showGate() { $("gate").classList.add("open"); wireGate(); }
+function wireGate() {
+  let mode = "in";
+  const inBtn = $("gIn"), err = $("gErr"), tog = $("gTog");
+  const setMode = (m) => { mode = m; err.textContent = ""; err.style.color = ""; inBtn.textContent = m === "in" ? "ログイン / Sign in" : "登録 / Register"; tog.textContent = m === "in" ? "初めての方 → 登録 / Register" : "← ログインに戻る / Sign in"; };
+  tog.onclick = () => setMode(mode === "in" ? "up" : "in");
+  inBtn.onclick = async () => {
+    err.textContent = ""; err.style.color = "";
+    const email = $("gEmail").value.trim(), pw = $("gPw").value;
+    if (!email || !pw) { err.textContent = "メール／パスワードを入力"; return; }
+    const lbl = inBtn.textContent; inBtn.disabled = true; inBtn.textContent = "…";
+    try {
+      if (mode === "in") { await JJ2Auth.signIn(email, pw); $("gate").classList.remove("open"); await continueBoot(); }
+      else { const r = await JJ2Auth.signUp(email, pw); if (r && r.session) { $("gate").classList.remove("open"); await continueBoot(); } else { err.style.color = "#5f9a55"; err.textContent = "確認メールを送信しました。リンクで登録を完了してください。"; inBtn.disabled = false; inBtn.textContent = lbl; } }
+    } catch (e) { err.style.color = ""; err.textContent = e.message || "失敗"; inBtn.disabled = false; inBtn.textContent = lbl; }
+  };
+  $("gPw").addEventListener("keydown", (e) => { if (e.key === "Enter") inBtn.click(); });
+}
+
+(async function boot() {
+  try { const s = await JJ2Auth.session(); if (!s) { showGate(); return; } }
+  catch (e) { console.warn("auth init failed", e); showGate(); return; }
+  await continueBoot();
 })();
 
 function relayout() { JJ2Forest.layout(); JJ2Forest.render(); JJ2Forest.fit(); }
