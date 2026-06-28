@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>JJ Mind-Forest v2</title>
+<style>
+  :root{ --bg:#FAF7F0; --ink:#3a352f; --muted:#8c8275; --line:#e7e0d3; --panel:#fffdf8; --bark:#8a6a47; --bark-dark:#6f5436; --vio:#7f77dd; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","PingFang SC","Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+  #app{position:fixed;inset:0;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);z-index:5}
+  header .t{font-weight:700}.header .s{color:var(--muted);font-size:12px}
+  header .sub{color:var(--muted);font-size:12px}.spacer{flex:1}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:13px;cursor:pointer;color:var(--ink)}
+  .btn:hover{border-color:var(--bark);background:#fbf7ee}
+  .btn.primary{background:var(--bark);border-color:var(--bark);color:#fff}.btn.primary:hover{background:var(--bark-dark)}
+  main{flex:1;display:flex;min-height:0}
+  #treepane{flex:1;position:relative;overflow:hidden;min-width:0}
+  #stage{width:100%;height:100%;display:block;cursor:grab;background:radial-gradient(120% 80% at 50% 100%, #f1ead9, var(--bg) 60%)}
+  #stage.grab{cursor:grabbing}
+  aside{flex:0 0 380px;width:380px;border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;overflow:hidden}
+  .empty{margin:auto;color:var(--muted);text-align:center;font-size:14px;line-height:2;padding:30px}
+  .rd{display:none;flex-direction:column;height:100%;overflow:hidden}
+  .rh{display:flex;align-items:center;gap:10px;padding:16px 18px 8px}
+  .rh .big{font-size:30px}.rh .k{color:var(--muted);font-size:12px}
+  .rb{padding:2px 18px 16px;overflow:auto}
+  .rb h2{font-size:18px;margin:.2em 0 .4em}
+  .rb .body{font-size:14px;line-height:1.65}
+  .rb .links{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+  .rb .links .lt{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+  .rb .links a{display:block;font-size:13px;color:var(--bark-dark);padding:3px 0;cursor:pointer}
+  .rf{margin-top:auto;padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px}
+  .zoom{position:absolute;left:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
+  .legend{position:absolute;left:14px;top:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:11px;line-height:1.7;opacity:.95;max-width:230px}
+  .legend b{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+  .scrim{position:fixed;inset:0;background:rgba(40,32,20,.3);display:none;align-items:center;justify-content:center;z-index:20}
+  .scrim.open{display:flex}
+  .modal{background:var(--panel);border-radius:16px;width:540px;max-width:94vw;max-height:90vh;overflow:auto;padding:20px;box-shadow:0 20px 60px rgba(60,40,20,.25)}
+  .modal h3{margin:0 0 6px;font-size:17px}
+  .modal .hint{color:var(--muted);font-size:12px;margin-bottom:10px;line-height:1.5}
+  textarea,select,input{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:150px;font-family:ui-monospace,Menlo,monospace}
+  .guess{margin:12px 0;padding:11px 13px;border:1px dashed var(--vio);border-radius:10px;background:#f3f1fb;font-size:13px;display:none}
+  .guess.on{display:block}
+  .guess b{color:#5b4b86}
+  .row{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .actions{display:flex;gap:8px;margin-top:16px}
+  pre{background:#f3eddf;border-radius:8px;padding:12px;font-size:12px;overflow:auto;max-height:46vh;white-space:pre-wrap;word-break:break-word}
+  @media(max-width:760px){ aside{position:absolute;right:0;top:0;height:100%;max-width:88vw;transform:translateX(102%);transition:.2s;box-shadow:-12px 0 36px rgba(80,60,30,.1)} aside.open{transform:none} .legend{display:none} }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <span class="t">🌳 JJ Mind-Forest</span>
+    <span class="sub">v2 · data-first · your data, your AI</span>
+    <span class="spacer"></span>
+    <button class="btn" id="btnReset" title="種データに戻す">↺</button>
+    <button class="btn ghost" id="btnFit">⤢ fit</button>
+    <button class="btn primary" id="btnFeed">🔌 取り込み / Feed-in</button>
+  </header>
+  <main>
+    <div id="treepane">
+      <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend" id="legend"></div>
+      <div class="zoom"><button class="btn" id="zin">＋</button><button class="btn" id="zout">－</button></div>
+    </div>
+    <aside id="panel">
+      <div class="empty" id="empty">🌲<br>プロジェクト/ノードをクリック<br>右に詳細が開きます</div>
+      <div class="rd" id="rd">
+        <div class="rh"><span class="big" id="rGlyph">🌳</span><div><div class="k" id="rKind"></div></div><span style="margin-left:auto;cursor:pointer;color:var(--muted);font-size:20px" id="rClose">×</span></div>
+        <div class="rb">
+          <h2 id="rLabel"></h2>
+          <div class="body" id="rBody"></div>
+          <div class="links" id="rLinks" style="display:none"><div class="lt">つながり · connections</div><div id="rLinkList"></div></div>
+        </div>
+        <div class="rf"><button class="btn primary" id="rPack" style="display:none">📤 文脈パック / context pack</button></div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- feed-in -->
+<div class="scrim" id="feedScrim">
+  <div class="modal">
+    <h3>🔌 取り込み / Feed-in</h3>
+    <div class="hint">セッションの要約を <b>構造つき</b> で貼り付け。1行目に <code>@project: 名前</code>（つなぐ先のヒント）。AI が attach 先を <b>推測</b> → あなたが確定。<br><code>- [kind] 見出し :: 本文</code>（kind = idea/milestone/decision/headache/value/open）</div>
+    <textarea id="feedText" placeholder="@project: Rakusat&#10;- [milestone] 核对 shipped :: 2nd Agent A verifies&#10;- [open] publish 6B batch"></textarea>
+    <div class="guess" id="guess"></div>
+    <div class="row" id="attachRow" style="display:none">
+      <span style="font-size:13px;color:var(--muted)">つなぐ先:</span>
+      <select id="attachSel"></select>
+    </div>
+    <div class="actions">
+      <button class="btn" id="feedCancel">やめる</button>
+      <button class="btn" id="feedParse" style="margin-left:auto">解析 / parse</button>
+      <button class="btn primary" id="feedSave" style="display:none">取り込む / merge</button>
+    </div>
+  </div>
+</div>
+
+<!-- context pack -->
+<div class="scrim" id="packScrim">
+  <div class="modal">
+    <h3>📤 文脈パック / context pack</h3>
+    <div class="hint">新しいセッションの<b>最初に AI へ渡す</b>構造データ。「どこで・何を・未完は何か」を伝えます。返信は <code>feedBackAs</code> の形式で。</div>
+    <pre id="packText"></pre>
+    <div class="actions"><button class="btn" id="packClose">閉じる</button><button class="btn primary" id="packCopy" style="margin-left:auto">コピー</button></div>
+  </div>
+</div>
+
+<script src="model.js"></script>
+<script src="forest.js"></script>
+<script>
+const { model } = JJ2;
+const $ = (id) => document.getElementById(id);
+const KIND_JA = { project:"プロジェクト · tree", idea:"芽 · idea", milestone:"花 · milestone", decision:"葉 · decision", headache:"節 · headache", value:"果 · value", open:"未完 · open", note:"記録 · note" };
+
+(async function () {
+  await model.load();
+  JJ2Forest.init($("stage"), model, onSelect);
+  buildLegend();
+  relayout();
+  window.addEventListener("resize", () => JJ2Forest.fit());
+  $("btnFit").onclick = () => JJ2Forest.fit();
+  $("zin").onclick = () => { $("stage").dispatchEvent(new WheelEvent("wheel", { deltaY: -200, clientX: innerWidth/3, clientY: innerHeight/2 })); };
+  $("zout").onclick = () => { $("stage").dispatchEvent(new WheelEvent("wheel", { deltaY: 200, clientX: innerWidth/3, clientY: innerHeight/2 })); };
+  $("btnReset").onclick = () => { if (confirm("種データに戻しますか？ / reset to seed?")) { model.reset(); location.reload(); } };
+  wireFeed(); wirePack();
+})();
+
+function relayout() { JJ2Forest.layout(); JJ2Forest.render(); JJ2Forest.fit(); }
+
+function buildLegend() {
+  const S = JJ2Forest.SKIN;
+  $("legend").innerHTML = "<b>記号 · the skin</b><br>" +
+    [["project","tree"],["idea","芽"],["milestone","花"],["decision","葉"],["headache","節"],["value","果"],["open","未完"]]
+    .map(([k, t]) => `${S[k]} ${t}`).join(" · ");
+}
+
+function onSelect(id) {
+  const n = id && model.byId(id);
+  if (!n) { $("rd").style.display = "none"; $("empty").style.display = ""; $("panel").classList.remove("open"); return; }
+  $("empty").style.display = "none"; $("rd").style.display = "flex"; $("panel").classList.add("open");
+  $("rGlyph").textContent = JJ2Forest.SKIN[n.kind] || "🍃";
+  $("rKind").textContent = KIND_JA[n.kind] || n.kind;
+  $("rLabel").textContent = n.label;
+  $("rBody").textContent = n.body || "";
+  const links = model.linkedLabels(n.id);
+  $("rLinks").style.display = links.length ? "block" : "none";
+  $("rLinkList").innerHTML = ""; links.forEach((l) => { const a = document.createElement("a"); a.textContent = "🔗 " + l; $("rLinkList").appendChild(a); });
+  const isP = !n.parent;
+  $("rPack").style.display = isP ? "" : "none";
+  $("rPack").onclick = () => openPack(n.id);
+}
+
+function wireFeed() {
+  $("btnFeed").onclick = () => { $("feedText").value = ""; $("guess").classList.remove("on"); $("attachRow").style.display = "none"; $("feedSave").style.display = "none"; $("feedScrim").classList.add("open"); $("feedText").focus(); };
+  $("feedCancel").onclick = () => $("feedScrim").classList.remove("open");
+  $("feedScrim").addEventListener("click", (e) => { if (e.target === $("feedScrim")) $("feedScrim").classList.remove("open"); });
+  $("feedParse").onclick = () => {
+    const parsed = model.parsePayload($("feedText").value);
+    if (!parsed.items.length) { $("guess").classList.add("on"); $("guess").innerHTML = "解析できる項目がありません（<code>- [kind] …</code> を1行以上）。"; return; }
+    const guess = model.guessAttach(parsed.hint, parsed.items);
+    const sel = $("attachSel"); sel.innerHTML = "";
+    model.projects().forEach((p) => { const o = document.createElement("option"); o.value = p.id; o.textContent = "🌳 " + p.label; sel.appendChild(o); });
+    const ne = document.createElement("option"); ne.value = "__new"; ne.textContent = "＋ 新しい木 / new project" + (guess.newName ? " (" + guess.newName + ")" : ""); sel.appendChild(ne);
+    sel.value = guess.projectId || "__new";
+    const whyJa = { hint: "ヒント @project から", inferred: "内容から推測", new: "新しい木として", none: "推測なし" }[guess.why] || "";
+    $("guess").classList.add("on");
+    $("guess").innerHTML = `AI の推測: <b>${guess.label || guess.newName || "新しい木"}</b> につなぎます <span style="color:var(--muted)">（${whyJa}）</span>。<br>${parsed.items.length} 項目。下で確定/変更できます。`;
+    $("attachRow").style.display = "flex";
+    $("feedSave").style.display = "";
+    $("feedSave").dataset.new = guess.newName || "";
+  };
+  $("feedSave").onclick = () => {
+    const parsed = model.parsePayload($("feedText").value);
+    const v = $("attachSel").value;
+    const r = model.feedIn(parsed.items, v === "__new" ? null : v, $("feedSave").dataset.new || "new project");
+    $("feedScrim").classList.remove("open");
+    relayout(); JJ2Forest.select(r.projectId);
+  };
+}
+
+function openPack(id) { $("packText").textContent = JSON.stringify(model.contextPack(id), null, 2); $("packScrim").classList.add("open"); }
+function wirePack() {
+  $("packClose").onclick = () => $("packScrim").classList.remove("open");
+  $("packScrim").addEventListener("click", (e) => { if (e.target === $("packScrim")) $("packScrim").classList.remove("open"); });
+  $("packCopy").onclick = () => { const t = $("packText").textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { $("packCopy").textContent = "✓ コピー"; setTimeout(() => $("packCopy").textContent = "コピー", 1200); }, () => {}); };
+}
+$("rClose") && ($("rClose").onclick = () => onSelect(null));
+document.addEventListener("DOMContentLoaded", () => { const c = document.getElementById("rClose"); if (c) c.onclick = () => onSelect(null); });
+</script>
+</body>
+</html>

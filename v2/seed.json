@@ -1,0 +1,40 @@
+{
+  "meta": { "title": "JJ Mind-Forest", "v": 2, "note": "the structured shape of memory.md — a forest of projects" },
+  "nodes": [
+    { "id": "rakusat", "kind": "project", "label": "落札ラボ / Rakusat", "body": "Court-auction platform. Launched ~2026-05-18.", "parent": null },
+    { "id": "rk1", "kind": "milestone", "label": "Auth rescue + read-flip", "body": "Front door rebuilt; public read-flip closed the premium leak.", "parent": "rakusat" },
+    { "id": "rk2", "kind": "value", "label": "Parsing skill = asset", "body": "\"grows as we use it\" — fixtures + rules survive any engine swap.", "parent": "rakusat" },
+    { "id": "rk3", "kind": "idea", "label": "先進入例 secret weapon", "body": "Hidden registry-driven reader replacing 例.", "parent": "rakusat" },
+    { "id": "rk4", "kind": "open", "label": "Commercialize (info-only)", "body": "No 宅建業 license; B2B via 経営革新計画.", "parent": "rakusat" },
+
+    { "id": "jjcf", "kind": "project", "label": "jjcashflow", "body": "Standalone Diary-Tree cashflow tool.", "parent": null },
+    { "id": "cf1", "kind": "milestone", "label": "Decoupled + Stage A live", "body": "Own repo + domain; accountant demo on jjconnect.tokyo.", "parent": "jjcf" },
+    { "id": "cf2", "kind": "value", "label": "代為入力 wedge (OCR)", "body": "Receipt → AI parse → 勘定科目; sits in front of 勘定奉行.", "parent": "jjcf" },
+
+    { "id": "jp", "kind": "project", "label": "jjconnect.jp", "body": "Company site / community platform.", "parent": null },
+    { "id": "jp1", "kind": "milestone", "label": "Auth0 → Supabase", "body": "Ripped Auth0 out; aligned to the stack.", "parent": "jp" },
+    { "id": "jp2", "kind": "headache", "label": "Domains suspended", "body": "お名前 本人性確認 → moved primary to rakusalab.com.", "parent": "jp" },
+
+    { "id": "mansion", "kind": "project", "label": "Mansion Manager", "body": "Building logbook → handover tool (design).", "parent": null },
+    { "id": "mm1", "kind": "idea", "label": "keep records, proper, minimal energy", "body": "The mission. A standard pre-structures every record.", "parent": "mansion" },
+    { "id": "mm2", "kind": "decision", "label": "Two pillars + all-is-money", "body": "Records→reports + a compliance schedule; MUST vs preference.", "parent": "mansion" },
+
+    { "id": "do", "kind": "project", "label": "道 / Do", "body": "Decision-support capstone.", "parent": null },
+    { "id": "do1", "kind": "idea", "label": "Let 道 emerge", "body": "Don't impose the model; let it crystallize from records.", "parent": "do" },
+    { "id": "do2", "kind": "decision", "label": "AI = 2-touchpoint black box", "body": "START (dig) + FINISH (close); the middle stays human.", "parent": "do" },
+
+    { "id": "diary", "kind": "project", "label": "jjdiary → mind-forest", "body": "This. A structured bridge between a mind and an AI's memory.", "parent": null },
+    { "id": "d1", "kind": "milestone", "label": "Forest shipped", "body": "Graduated branches become standalone trees.", "parent": "diary" },
+    { "id": "d2", "kind": "idea", "label": "Structured feed in/out", "body": "Structure travels with the message; AI guesses the attachment.", "parent": "diary" },
+    { "id": "d3", "kind": "open", "label": "AI-assisted sorting", "body": "Human arranges + connects; AI offers opinion. The headache.", "parent": "diary" },
+
+    { "id": "strat", "kind": "project", "label": "Strategy · 経営革新", "body": "The business thread under everything.", "parent": null },
+    { "id": "st1", "kind": "value", "label": "Value-ladder moat", "body": "data → trusted data → opinion → high-value opinion; trust is the currency.", "parent": "strat" },
+    { "id": "st2", "kind": "decision", "label": "Info-only, no license", "body": "What lets a 法人 run without a 宅建業免許.", "parent": "strat" }
+  ],
+  "rels": [
+    { "from": "rk2", "to": "cf2", "kind": "link" },
+    { "from": "diary", "to": "strat", "kind": "link" },
+    { "from": "rk4", "to": "st2", "kind": "link" }
+  ]
+}
