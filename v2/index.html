@@ -81,6 +81,7 @@
         <div class="rh"><span class="big" id="rGlyph">🌳</span><div><div class="k" id="rKind"></div></div><span style="margin-left:auto;cursor:pointer;color:var(--muted);font-size:20px" id="rClose">×</span></div>
         <div class="rb">
           <h2 id="rLabel"></h2>
+          <div id="rMeta" style="font-size:12px;color:var(--muted);margin:-2px 0 10px"></div>
           <div class="body" id="rBody"></div>
           <div class="links" id="rLinks" style="display:none"><div class="lt">つながり · connections</div><div id="rLinkList"></div></div>
         </div>
@@ -184,7 +185,8 @@ function buildLegend() {
   const S = JJ2Forest.SKIN;
   $("legend").innerHTML = "<b>記号 · the skin</b><br>" +
     [["project","tree"],["idea","芽"],["milestone","花"],["decision","葉"],["headache","節"],["value","果"],["open","未完"]]
-    .map(([k, t]) => `${S[k]} ${t}`).join(" · ");
+    .map(([k, t]) => `${S[k]} ${t}`).join(" · ")
+    + "<br><span style='color:var(--muted)'>✨新しい → 育つ → 🍂枯れかけ（放置）</span>";
 }
 
 function onSelect(id) {
@@ -194,6 +196,8 @@ function onSelect(id) {
   $("rGlyph").textContent = JJ2Forest.SKIN[n.kind] || "🍃";
   $("rKind").textContent = KIND_JA[n.kind] || n.kind;
   $("rLabel").textContent = n.label;
+  const _now = model.freshest(); const _age = n.updated ? Math.max(0, (_now - Date.parse(n.updated)) / 86400000) : 0;
+  $("rMeta").textContent = `更新 ${n.updated || "—"} · ${n.source || "human"}` + ((n.parent && _age > 30) ? " · 🍂 枯れかけ" : (_age < 2.5 ? " · ✨ 新しい" : ""));
   $("rBody").textContent = n.body || "";
   const links = model.linkedLabels(n.id);
   $("rLinks").style.display = links.length ? "block" : "none";

@@ -13,12 +13,25 @@
   const el = (t, a, p) => { const e = document.createElementNS(SVG, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
   const BASE = 760;
 
-  // LIVE type: the glyph is derived from the node's state, not clicked one-by-one.
-  // A node that has grown children IS a branch now — it changes on its own.
-  function glyphFor(n) {
-    if (!n.parent) return SKIN.project;
-    if (model.childrenOf(n.id).length) return "🌿";
-    return SKIN[n.kind] || SKIN.note;
+  // LIVING node: glyph + freshness derived from its life (kind, children, age) — never clicked.
+  // grew children → it's a branch; an untouched leaf wilts; brand-new growth glows.
+  function life(n) {
+    const now = model.freshest ? model.freshest() : Date.now();
+    const u = n.updated ? Date.parse(n.updated) : now;
+    const ageDays = Math.max(0, (now - u) / 86400000);
+    let glyph;
+    if (!n.parent) glyph = SKIN.project;
+    else if (model.childrenOf(n.id).length) glyph = "🌿";
+    else if (n.kind === "value") glyph = "🍎";
+    else if (n.kind === "milestone") glyph = "🌸";
+    else if (n.kind === "headache") glyph = "🪢";
+    else if (n.kind === "idea") glyph = "🌱";
+    else glyph = "🍃";
+    let stale = false;
+    if (n.parent && ageDays > 30 && (glyph === "🍃" || glyph === "🌱")) { glyph = "🍂"; stale = true; }
+    const opacity = ageDays > 45 ? 0.5 : ageDays > 18 ? 0.74 : 1;
+    const fresh = !!n.parent && ageDays < 2.5;
+    return { glyph, opacity, stale, fresh, ageDays };
   }
 
   function layout() {
@@ -68,10 +81,12 @@
     model.nodes().forEach((n) => {
       const p = pos[n.id]; if (!p) return;
       const isP = !n.parent;
-      const grp = el("g", { class: "node", transform: `translate(${p.x},${p.y})`, style: "cursor:pointer" }, g);
-      el("title", {}, grp).textContent = n.label;
+      const L = life(n);
+      const grp = el("g", { class: "node", transform: `translate(${p.x},${p.y})`, style: "cursor:pointer", opacity: L.opacity }, g);
+      el("title", {}, grp).textContent = n.label + (L.stale ? " · 枯れかけ / wilting" : "") + (n.source ? "  (" + n.source + ")" : "");
+      if (L.fresh) el("circle", { r: isP ? 25 : 18, cx: 0, cy: 0, fill: "none", stroke: "#97c459", "stroke-width": 2, opacity: 0.7 }, grp);
       el("circle", { r: isP ? 21 : 14, cx: 0, cy: 0, fill: "#fff", stroke: sel === n.id ? "#6f5436" : "#e7e0d3", "stroke-width": sel === n.id ? 3 : 1.6 }, grp);
-      el("text", { x: 0, y: 1, "text-anchor": "middle", "dominant-baseline": "central", "font-size": isP ? 26 : 18, style: "paint-order:stroke;stroke:#fff;stroke-width:3px" }, grp).textContent = glyphFor(n);
+      el("text", { x: 0, y: 1, "text-anchor": "middle", "dominant-baseline": "central", "font-size": isP ? 26 : 18, style: "paint-order:stroke;stroke:#fff;stroke-width:3px" }, grp).textContent = L.glyph;
       if (isP) el("text", { x: 0, y: 36, "text-anchor": "middle", "font-size": 13, "font-weight": "700", fill: "#3a352f", style: "paint-order:stroke;stroke:#FAF7F0;stroke-width:4px" }, grp).textContent = n.label;
       grp.addEventListener("click", (e) => { e.stopPropagation(); select(n.id); });
     });

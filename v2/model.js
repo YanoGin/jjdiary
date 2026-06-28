@@ -27,6 +27,10 @@
     },
     uid() { return "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); },
 
+    // the forest's "present" = its newest node (clock-independent), and a fresh stamp for new growth
+    freshest() { let m = 0; this.nodes().forEach((n) => { const u = n.updated ? Date.parse(n.updated) : 0; if (u > m) m = u; }); return m || Date.now(); },
+    _stamp() { const f = Math.max(this.freshest() + 86400000, Date.now()); return new Date(f).toISOString().slice(0, 10); },
+
     // ============ structured EXCHANGE (the AI-adaptable part) ============
 
     // parse a structured feed payload:  @project: <hint>  +  - [kind] label :: body
@@ -76,11 +80,12 @@
 
     // APPLY the push: add nodes (AI-typed) + create the proposed connections (label-matched)
     applyPush(items, projectId, newName) {
+      const stamp = this._stamp();
       let pid = projectId;
-      if (!pid) { const p = { id: this.uid(), kind: "project", label: newName || "new project", body: "", parent: null }; this.nodes().push(p); pid = p.id; }
+      if (!pid) { const p = { id: this.uid(), kind: "project", label: newName || "new project", body: "", parent: null, source: "human", created: stamp, updated: stamp }; this.nodes().push(p); pid = p.id; }
       let added = 0, linked = 0;
       items.forEach((it) => {
-        const n = { id: this.uid(), kind: it.kind || "note", label: it.label, body: it.body || "", parent: pid, fed: true };
+        const n = { id: this.uid(), kind: it.kind || "note", label: it.label, body: it.body || "", parent: pid, fed: true, source: "ai", created: stamp, updated: stamp };
         this.nodes().push(n); added++;
         (it.links || []).forEach((lab) => {
           const L = lab.toLowerCase();
