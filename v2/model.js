@@ -40,9 +40,11 @@
         let rest = m[1], kind = "note";
         const tm = /^\[(\w+)\]\s*/.exec(rest);
         if (tm) { kind = tm[1].toLowerCase(); rest = rest.slice(tm[0].length); }
+        let links = []; const lm = /\s>>\s*links?:\s*(.+)$/i.exec(rest);
+        if (lm) { links = lm[1].split(",").map((x) => x.trim()).filter(Boolean); rest = rest.slice(0, lm.index).trim(); }
         let body = ""; const bi = rest.indexOf("::");
         if (bi >= 0) { body = rest.slice(bi + 2).trim(); rest = rest.slice(0, bi).trim(); }
-        items.push({ kind, label: rest, body });
+        items.push({ kind, label: rest, body, links });
       });
       return { hint, items };
     },
@@ -63,14 +65,31 @@
       return best ? { projectId: best.id, label: best.label, why: "inferred" } : { projectId: null, why: "none" };
     },
 
-    // merge the feed into a project (existing id, or create one from newName)
-    feedIn(items, projectId, newName) {
+    // PREVIEW a push (the AI's reasoned structure) before the human applies it — no manual select
+    previewPush(parsed) {
+      const g = this.guessAttach(parsed.hint, parsed.items);
+      const linkCount = parsed.items.reduce((s, it) => s + (it.links ? it.links.length : 0), 0);
+      return { targetId: g.projectId || null, newName: g.newName || null,
+        target: g.projectId ? this.byId(g.projectId).label : ("＋ " + (g.newName || "new project")),
+        why: g.why, items: parsed.items, linkCount };
+    },
+
+    // APPLY the push: add nodes (AI-typed) + create the proposed connections (label-matched)
+    applyPush(items, projectId, newName) {
       let pid = projectId;
       if (!pid) { const p = { id: this.uid(), kind: "project", label: newName || "new project", body: "", parent: null }; this.nodes().push(p); pid = p.id; }
-      let added = 0;
-      items.forEach((it) => { this.nodes().push({ id: this.uid(), kind: it.kind || "note", label: it.label, body: it.body || "", parent: pid, fed: true }); added++; });
+      let added = 0, linked = 0;
+      items.forEach((it) => {
+        const n = { id: this.uid(), kind: it.kind || "note", label: it.label, body: it.body || "", parent: pid, fed: true };
+        this.nodes().push(n); added++;
+        (it.links || []).forEach((lab) => {
+          const L = lab.toLowerCase();
+          const tgt = this.nodes().find((x) => x.id !== n.id && (x.label.toLowerCase().includes(L) || L.includes(x.label.toLowerCase())));
+          if (tgt) { this.rels().push({ from: n.id, to: tgt.id, kind: "link" }); linked++; }
+        });
+      });
       this.save();
-      return { projectId: pid, added };
+      return { projectId: pid, added, linked };
     },
 
     // FEED-OUT: a structured context pack an AI reads at the START of a session

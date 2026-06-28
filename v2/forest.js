@@ -13,6 +13,14 @@
   const el = (t, a, p) => { const e = document.createElementNS(SVG, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
   const BASE = 760;
 
+  // LIVE type: the glyph is derived from the node's state, not clicked one-by-one.
+  // A node that has grown children IS a branch now — it changes on its own.
+  function glyphFor(n) {
+    if (!n.parent) return SKIN.project;
+    if (model.childrenOf(n.id).length) return "🌿";
+    return SKIN[n.kind] || SKIN.note;
+  }
+
   function layout() {
     pos = {};
     let x = 220;
@@ -63,7 +71,7 @@
       const grp = el("g", { class: "node", transform: `translate(${p.x},${p.y})`, style: "cursor:pointer" }, g);
       el("title", {}, grp).textContent = n.label;
       el("circle", { r: isP ? 21 : 14, cx: 0, cy: 0, fill: "#fff", stroke: sel === n.id ? "#6f5436" : "#e7e0d3", "stroke-width": sel === n.id ? 3 : 1.6 }, grp);
-      el("text", { x: 0, y: 1, "text-anchor": "middle", "dominant-baseline": "central", "font-size": isP ? 26 : 18, style: "paint-order:stroke;stroke:#fff;stroke-width:3px" }, grp).textContent = SKIN[n.kind] || SKIN.note;
+      el("text", { x: 0, y: 1, "text-anchor": "middle", "dominant-baseline": "central", "font-size": isP ? 26 : 18, style: "paint-order:stroke;stroke:#fff;stroke-width:3px" }, grp).textContent = glyphFor(n);
       if (isP) el("text", { x: 0, y: 36, "text-anchor": "middle", "font-size": 13, "font-weight": "700", fill: "#3a352f", style: "paint-order:stroke;stroke:#FAF7F0;stroke-width:4px" }, grp).textContent = n.label;
       grp.addEventListener("click", (e) => { e.stopPropagation(); select(n.id); });
     });

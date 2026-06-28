@@ -58,7 +58,7 @@
     <span class="spacer"></span>
     <button class="btn" id="btnReset" title="種データに戻す">↺</button>
     <button class="btn ghost" id="btnFit">⤢ fit</button>
-    <button class="btn primary" id="btnFeed">🔌 取り込み / Feed-in</button>
+    <button class="btn primary" id="btnFeed">📨 push</button>
   </header>
   <main>
     <div id="treepane">
@@ -84,18 +84,14 @@
 <!-- feed-in -->
 <div class="scrim" id="feedScrim">
   <div class="modal">
-    <h3>🔌 取り込み / Feed-in</h3>
-    <div class="hint">セッションの要約を <b>構造つき</b> で貼り付け。1行目に <code>@project: 名前</code>（つなぐ先のヒント）。AI が attach 先を <b>推測</b> → あなたが確定。<br><code>- [kind] 見出し :: 本文</code>（kind = idea/milestone/decision/headache/value/open）</div>
-    <textarea id="feedText" placeholder="@project: Rakusat&#10;- [milestone] 核对 shipped :: 2nd Agent A verifies&#10;- [open] publish 6B batch"></textarea>
+    <h3>📨 push — あなた、または あなたのAIから</h3>
+    <div class="hint">セッション終わりに <b>あなたのAIが構造つきで push</b>（あなたも書けます）。AIが <b>つなぎ先・種類・つながり</b>を判断 → あなたは<b>確認して適用</b>（選ぶのではなく、お互いの知性で）。<br><code>@project: 名前</code> ・ <code>- [kind] 見出し :: 本文 >> links: 既存ノード名</code></div>
+    <textarea id="feedText" placeholder="@project: Rakusat&#10;- [milestone] 核对 shipped :: 2nd Agent A verifies&#10;- [fruit] 先進入例 prod >> links: Parsing skill = asset&#10;- [open] publish 6B"></textarea>
     <div class="guess" id="guess"></div>
-    <div class="row" id="attachRow" style="display:none">
-      <span style="font-size:13px;color:var(--muted)">つなぐ先:</span>
-      <select id="attachSel"></select>
-    </div>
     <div class="actions">
       <button class="btn" id="feedCancel">やめる</button>
-      <button class="btn" id="feedParse" style="margin-left:auto">解析 / parse</button>
-      <button class="btn primary" id="feedSave" style="display:none">取り込む / merge</button>
+      <button class="btn" id="feedParse" style="margin-left:auto">プレビュー / preview</button>
+      <button class="btn primary" id="feedSave" style="display:none">適用 / apply</button>
     </div>
   </div>
 </div>
@@ -156,28 +152,23 @@ function onSelect(id) {
 }
 
 function wireFeed() {
-  $("btnFeed").onclick = () => { $("feedText").value = ""; $("guess").classList.remove("on"); $("attachRow").style.display = "none"; $("feedSave").style.display = "none"; $("feedScrim").classList.add("open"); $("feedText").focus(); };
+  $("btnFeed").onclick = () => { $("feedText").value = ""; $("guess").classList.remove("on"); $("feedSave").style.display = "none"; $("feedScrim").classList.add("open"); $("feedText").focus(); };
   $("feedCancel").onclick = () => $("feedScrim").classList.remove("open");
   $("feedScrim").addEventListener("click", (e) => { if (e.target === $("feedScrim")) $("feedScrim").classList.remove("open"); });
   $("feedParse").onclick = () => {
     const parsed = model.parsePayload($("feedText").value);
-    if (!parsed.items.length) { $("guess").classList.add("on"); $("guess").innerHTML = "解析できる項目がありません（<code>- [kind] …</code> を1行以上）。"; return; }
-    const guess = model.guessAttach(parsed.hint, parsed.items);
-    const sel = $("attachSel"); sel.innerHTML = "";
-    model.projects().forEach((p) => { const o = document.createElement("option"); o.value = p.id; o.textContent = "🌳 " + p.label; sel.appendChild(o); });
-    const ne = document.createElement("option"); ne.value = "__new"; ne.textContent = "＋ 新しい木 / new project" + (guess.newName ? " (" + guess.newName + ")" : ""); sel.appendChild(ne);
-    sel.value = guess.projectId || "__new";
-    const whyJa = { hint: "ヒント @project から", inferred: "内容から推測", new: "新しい木として", none: "推測なし" }[guess.why] || "";
+    if (!parsed.items.length) { $("guess").classList.add("on"); $("guess").innerHTML = "解析できる項目がありません（<code>- [kind] …</code> を1行以上）。"; $("feedSave").style.display = "none"; return; }
+    const pv = model.previewPush(parsed);
+    const whyJa = { hint: "@project ヒントから", inferred: "内容から推測", new: "新しい木として", none: "推測なし — <code>@project:</code> を追記してください" }[pv.why] || "";
+    const list = parsed.items.map((it) => `${JJ2Forest.SKIN[it.kind] || "🍃"} ${it.label}${(it.links && it.links.length) ? ` <span style="color:#7f77dd">🔗 ${it.links.join(", ")}</span>` : ""}`).join("<br>");
     $("guess").classList.add("on");
-    $("guess").innerHTML = `AI の推測: <b>${guess.label || guess.newName || "新しい木"}</b> につなぎます <span style="color:var(--muted)">（${whyJa}）</span>。<br>${parsed.items.length} 項目。下で確定/変更できます。`;
-    $("attachRow").style.display = "flex";
+    $("guess").innerHTML = `<b>→ ${pv.target}</b> <span style="color:var(--muted)">（${whyJa}）</span><br><div style="margin-top:6px;font-size:12px;line-height:1.7">${list}</div><div style="margin-top:7px;font-size:11px;color:var(--muted)">違う木なら上の <code>@project:</code> を直して再プレビュー（選択ではなく編集で）。</div>`;
     $("feedSave").style.display = "";
-    $("feedSave").dataset.new = guess.newName || "";
   };
   $("feedSave").onclick = () => {
     const parsed = model.parsePayload($("feedText").value);
-    const v = $("attachSel").value;
-    const r = model.feedIn(parsed.items, v === "__new" ? null : v, $("feedSave").dataset.new || "new project");
+    const pv = model.previewPush(parsed);
+    const r = model.applyPush(parsed.items, pv.targetId, pv.newName);
     $("feedScrim").classList.remove("open");
     relayout(); JJ2Forest.select(r.projectId);
   };
